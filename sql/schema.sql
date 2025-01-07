@@ -77,6 +77,7 @@ CREATE TABLE Stock(
 CREATE TABLE Reparation_composant(
    id_composant INTEGER,
    id_reparation INTEGER,
+   probleme VARCHAR(100),
    PRIMARY KEY(id_composant, id_reparation),
    FOREIGN KEY(id_composant) REFERENCES Composant(id_composant),
    FOREIGN KEY(id_reparation) REFERENCES Reparation(id_reparation)

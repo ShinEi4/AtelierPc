@@ -19,7 +19,6 @@ public class ReparationServlet extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors de la récupération des réparations.");
         }
-
         request.getRequestDispatcher("/WEB-INF/reparation_list.jsp").forward(request, response);
     }
 }
