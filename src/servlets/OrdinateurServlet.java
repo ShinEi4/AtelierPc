@@ -2,11 +2,14 @@ package servlets;
 
 import models.Ordinateur;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet("/ordinateurs")
 public class OrdinateurServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

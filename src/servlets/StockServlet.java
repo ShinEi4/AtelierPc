@@ -1,11 +1,14 @@
 package servlets;
 
 import models.Stock;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet("/stocks")
 public class StockServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

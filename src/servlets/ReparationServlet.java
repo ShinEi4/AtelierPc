@@ -4,11 +4,14 @@ package servlets;
 
 import models.Reparation;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet("/reparations")
 public class ReparationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

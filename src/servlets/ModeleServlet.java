@@ -2,18 +2,19 @@ package servlets;
 
 
 
-import models.Marque;
 import models.Modele;
 import utils.Connexion;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
+@WebServlet("/modeles")
 public class ModeleServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {

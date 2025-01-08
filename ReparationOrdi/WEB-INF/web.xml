@@ -1,73 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
-                      https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-  version="6.0"
-  metadata-complete="true">
-    <display-name>Atelier</display-name>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
 
-    <!-- <servlet>
-      <servlet-name>ListeClient</servlet-name>
-      <servlet-class>servlets.ClientServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>ListeClient</servlet-name>
-      <url-pattern>/listeClient</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-      <servlet-name>ListeComposant</servlet-name>
-      <servlet-class>servlets.ComposantServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>ListeComposant</servlet-name>
-      <url-pattern>/listeComposant</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-      <servlet-name>ListeMarque</servlet-name>
-      <servlet-class>servlets.MarqueServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>ListeMarque</servlet-name>
-      <url-pattern>/listeMarque</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-      <servlet-name>ListeModele</servlet-name>
-      <servlet-class>servlets.ModeleServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>ListeModele</servlet-name>
-      <url-pattern>/listeModele</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-      <servlet-name>ListeOrdinateur</servlet-name>
-      <servlet-class>servlets.OrdinateurServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>ListeOrdinateur</servlet-name>
-      <url-pattern>/listeOrdinateur</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-      <servlet-name>ListeTechnicien</servlet-name>
-      <servlet-class>servlets.TechnicienServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>ListeTechnicien</servlet-name>
-      <url-pattern>/listeTechnicien</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-      <servlet-name>ListeReparation</servlet-name>
-      <servlet-class>servlets.ReparationServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>ListeReparation</servlet-name>
-      <url-pattern>/listeReparation</url-pattern>
-    </servlet-mapping> -->
-    
 </web-app>
