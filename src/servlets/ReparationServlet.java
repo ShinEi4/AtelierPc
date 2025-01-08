@@ -1,6 +1,7 @@
 package servlets;
 
 import models.Reparation;
+import models.TypeComposant;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -14,6 +15,8 @@ public class ReparationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         String typeComposant = request.getParameter("typeComposant");
+        List<TypeComposant> tc = TypeComposant.getAll(null); // Connexion à fournir
+        request.setAttribute("typescomposants", tc);
         List<Reparation> reparations;
 
         try {
