@@ -1,14 +1,12 @@
 package models;
 
-import utils.Connexion;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import utils.Connexion;
 
 public class Reparation {
     private int idReparation;
@@ -254,5 +252,47 @@ public class Reparation {
         return null;
     }
     
-    
+    // Fonction pour récupérer les réparations associées à un type de composant donné
+    public static List<Reparation> getByComposantType(Connection connexion, String typeComposant) throws Exception {
+        // Vérification de la connexion et initialisation si nécessaire
+        if (connexion == null) {
+            connexion = Connexion.getConnexion();
+        }
+
+        List<Reparation> reparations = new ArrayList<>();
+        String sql = "SELECT DISTINCT r.* " +
+                    "FROM reparation r " +
+                    "JOIN reparation_composant rc ON r.id_reparation = rc.id_reparation " +
+                    "JOIN composant c ON rc.id_composant = c.id_composant " +
+                    "WHERE c.type_composant = ?";
+
+        try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
+            stmt.setString(1, typeComposant);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    // Récupérer les données de chaque réparation
+                    Technicien technicien = Technicien.getById(connexion, rs.getInt("id_technicien"));
+                    Ordinateur ordinateur = Ordinateur.getById(connexion, rs.getInt("id_ordinateur"));
+                    
+                    Reparation reparation = new Reparation(
+                            rs.getInt("id_reparation"),
+                            rs.getTimestamp("date_debut"),
+                            rs.getTimestamp("date_fin"),
+                            rs.getString("descri"),
+                            technicien,
+                            ordinateur,
+                            rs.getDouble("prix_main_doeuvre")
+                    );
+
+                    // Récupérer les composants associés à cette réparation
+                    List<Composant> composants = getComposantsByReparationId(connexion, reparation.getIdReparation());
+                    reparation.setComposants(composants);
+
+                    reparations.add(reparation);
+                }
+            }
+        }
+        return reparations;
+    }
+
 }
