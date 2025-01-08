@@ -1,56 +1,95 @@
 package servlets;
 
-
-
 import models.Composant;
 import models.TypeComposant;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import java.io.IOException;
+import utils.Connexion;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
+@WebServlet("/ComposantFormServlet")
 public class ComposantFormServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String composantId = request.getParameter("idComposant");
+        Connection connexion = null;
+        try {
+            connexion = Connexion.getConnexion();
+            // Récupérer tous les TypeComposant pour les afficher dans le formulaire
+            List<TypeComposant> typeComposants = TypeComposant.getAll(connexion);
+            request.setAttribute("typeComposants", typeComposants);
 
-        if (composantId != null) {
-            try {
-                Composant composant = Composant.getById(null,Integer.parseInt(composantId)); // Connexion à fournir
-                request.setAttribute("composant", composant);
-            } catch (Exception e) {
-                e.printStackTrace();
+            // Rediriger vers la page JSP du formulaire
+            request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Erreur lors de la récupération des types de composants : " + e.getMessage());
+            request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+        } finally {
+            if (connexion != null) {
+                try {
+                    connexion.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
-        request.getRequestDispatcher("/WEB-INF/composant_form.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nomComposant = request.getParameter("nomComposant");
-        String prixComposant = request.getParameter("prixComposant");
-        String typeComposant = request.getParameter("idTypeComposant");
+        String nom = request.getParameter("nom");
+        String prixStr = request.getParameter("prix");
+        String idTypeStr = request.getParameter("idTypeComposant");
+
+        String message;
+        Connection connexion = null;
 
         try {
-            Composant composant;
-            String composantId = request.getParameter("idComposant");
-
-            if (composantId != null && !composantId.isEmpty()) {
-                composant = Composant.getById(null,Integer.parseInt(composantId) );
-                composant.setNom(nomComposant);
-                composant.setPrix(Double.parseDouble(prixComposant));
-                composant.setTypeComposant(TypeComposant.getById(null,(Integer.parseInt(typeComposant))));
-                composant.save(null); // Connexion à fournir
-            } else {
-                composant = new Composant(nomComposant, TypeComposant.getById(null, Integer.parseInt(typeComposant)), Double.parseDouble(prixComposant));
-                composant.save(null); // Connexion à fournir
+            // Validation des champs
+            if (nom == null || nom.isEmpty() || prixStr == null || prixStr.isEmpty() || idTypeStr == null || idTypeStr.isEmpty()) {
+                message = "Tous les champs sont obligatoires.";
+                request.setAttribute("errorMessage", message);
+                request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+                return;
             }
 
-            response.sendRedirect(request.getContextPath() + "/composant");
+            double prix = Double.parseDouble(prixStr);
+            int idTypeComposant = Integer.parseInt(idTypeStr);
+
+            connexion = Connexion.getConnexion();
+            TypeComposant typeComposant = TypeComposant.getById(connexion, idTypeComposant);
+
+            if (typeComposant == null) {
+                throw new Exception("Le type de composant sélectionné n'existe pas.");
+            }
+
+            Composant composant = new Composant(nom, typeComposant, prix);
+            composant.save(connexion);
+
+            message = "Composant ajouté avec succès !";
+            request.setAttribute("successMessage", message);
+            request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Erreur lors de la sauvegarde du composant.");
-            request.getRequestDispatcher("/WEB-INF/composant_form.jsp").forward(request, response);
+            message = "Erreur lors de l'ajout du composant : " + e.getMessage();
+            request.setAttribute("errorMessage", message);
+            request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+        } finally {
+            if (connexion != null) {
+                try {
+                    connexion.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
