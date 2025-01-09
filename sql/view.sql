@@ -1,0 +1,4 @@
+CREATE OR REPLACE VIEW v_retour AS
+SELECT * 
+FROM Reparation
+WHERE date_fin IS NOT NULL;

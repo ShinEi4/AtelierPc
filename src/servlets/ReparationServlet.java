@@ -14,20 +14,32 @@ public class ReparationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        String typeComposant = request.getParameter("typeComposant");
-        
+        String typeComposant=null;
+        String categorieModele=null;
+        if (request.getParameter("typeComposant") !=null) {
+            typeComposant = request.getParameter("typeComposant");
+        }
+        if (request.getParameter("categorieModele") !=null) {
+            categorieModele = request.getParameter("categorieModele");
+            
+        }
 
         try {
             List<TypeComposant> tc = TypeComposant.getAll(null); // Connexion à fournir
             request.setAttribute("typescomposants", tc);
             List<Reparation> reparations;
-            // Si l'action est une recherche et qu'un paramètre typeComposant est fourni
+
             if ("recherche".equalsIgnoreCase(action) && typeComposant != null && !typeComposant.isEmpty()) {
+                // Recherche par type de composant
                 reparations = Reparation.getByComposantType(null, typeComposant); // Connexion à fournir
+            } else if ("rechercheretour".equalsIgnoreCase(action)) {
+                // Recherche des retours
+                reparations = Reparation.getRetours(null,typeComposant,categorieModele); // Connexion à fournir
             } else {
-                // Sinon, récupérer toutes les réparations
+                // Récupérer toutes les réparations
                 reparations = Reparation.getAll(null); // Connexion à fournir
             }
+
             request.setAttribute("reparations", reparations);
         } catch (Exception e) {
             e.printStackTrace();

@@ -294,5 +294,67 @@ public class Reparation {
         }
         return reparations;
     }
-
+    
+    public static List<Reparation> getRetours(Connection connexion, String typeComposant, String categorieModele) throws Exception {
+        if (connexion == null) {
+            connexion = Connexion.getConnexion();
+        }
+    
+        List<Reparation> reparations = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT DISTINCT r.* " +
+            "FROM v_retour r " +
+            "JOIN reparation_composant rc ON r.id_reparation = rc.id_reparation " +
+            "JOIN composant c ON rc.id_composant = c.id_composant " +
+            "JOIN modele_composant mc ON c.id_composant = mc.id_composant " +
+            "JOIN modele m ON mc.id_modele = m.id_modele " +
+            "JOIN categorie_modele cm ON m.id_categorie_modele = cm.id_categorie_modele "
+        );
+    
+        // Ajout des conditions dynamiques
+        List<Object> params = new ArrayList<>();
+        boolean whereAdded = false;
+    
+        if (typeComposant != null && !typeComposant.isEmpty()) {
+            sql.append("WHERE c.id_type_composant = ? ");
+            params.add(typeComposant);
+            whereAdded = true;
+        }
+        if (categorieModele != null && !categorieModele.isEmpty()) {
+            sql.append(whereAdded ? "AND " : "WHERE ");
+            sql.append("cm.nom_type = ? ");
+            params.add(categorieModele);
+        }
+    
+        try (PreparedStatement stmt = connexion.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+    
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Technicien technicien = Technicien.getById(connexion, rs.getInt("id_technicien"));
+                    Ordinateur ordinateur = Ordinateur.getById(connexion, rs.getInt("id_ordinateur"));
+    
+                    Reparation reparation = new Reparation(
+                        rs.getInt("id_reparation"),
+                        rs.getTimestamp("date_debut"),
+                        rs.getTimestamp("date_fin"),
+                        rs.getString("descri"),
+                        technicien,
+                        ordinateur,
+                        rs.getDouble("prix_main_doeuvre")
+                    );
+    
+                    // Récupérer les composants associés à la réparation
+                    List<Composant> composants = getComposantsByReparationId(connexion, reparation.getIdReparation());
+                    reparation.setComposants(composants);
+    
+                    reparations.add(reparation);
+                }
+            }
+        }
+        return reparations;
+    }
+    
 }
