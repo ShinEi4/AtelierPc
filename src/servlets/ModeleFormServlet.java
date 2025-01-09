@@ -1,5 +1,6 @@
 package servlets;
 
+import models.CategorieModele;
 import models.Composant;
 import models.Marque;
 import models.Modele;
@@ -15,6 +16,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import models.CategorieModele;
 
 @WebServlet("/modeleform")
 public class ModeleFormServlet extends HttpServlet {
@@ -55,6 +57,7 @@ public class ModeleFormServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nomModele = request.getParameter("nomModele");
         String idMarqueStr = request.getParameter("idMarque");
+        String idCategorie= request.getParameter("idCategorieModele");
         String[] composantsIds = request.getParameterValues("composants");
 
         String message;
@@ -62,10 +65,10 @@ public class ModeleFormServlet extends HttpServlet {
 
         try {
             // Validation des champs obligatoires
-            if (nomModele == null || nomModele.trim().isEmpty() || idMarqueStr == null || idMarqueStr.isEmpty()) {
-                message = "Le nom du modèle et la marque sont obligatoires.";
+            if (nomModele == null || nomModele.trim().isEmpty() || idMarqueStr == null || idMarqueStr.isEmpty()  || idCategorie == null || idCategorie.isEmpty()) {
+                message = "Le nom du modèle , la marque et la categorie sont obligatoires.";
                 request.setAttribute("errorMessage", message);
-                request.getRequestDispatcher("/WEB-INF/formModele.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/modele_form.jsp").forward(request, response);
                 return;
             }
 
@@ -74,16 +77,17 @@ public class ModeleFormServlet extends HttpServlet {
 
             // Récupération de la marque associée
             Marque marque = Marque.getById(connexion, idMarque);
+            CategorieModele cm = CategorieModele.getById(connexion, Integer.parseInt(idCategorie));
 
             if (marque == null) {
                 message = "La marque sélectionnée n'existe pas.";
                 request.setAttribute("errorMessage", message);
-                request.getRequestDispatcher("/WEB-INF/formModele.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/modele_form.jsp").forward(request, response);
                 return;
             }
 
             // Création du modèle
-            Modele modele = new Modele(nomModele, marque);
+            Modele modele = new Modele(nomModele, marque,cm);
 
             // Ajout des composants sélectionnés
             if (composantsIds != null) {
