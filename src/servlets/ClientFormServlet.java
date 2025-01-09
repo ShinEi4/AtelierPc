@@ -44,12 +44,12 @@ public class ClientFormServlet extends HttpServlet {
 
             message = "Client ajouté avec succès !";
             request.setAttribute("successMessage", message);
-            request.getRequestDispatcher("/formClient.jsp").forward(request, response);
+            request.getRequestDispatcher("/client_form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             message = "Erreur lors de l'ajout du client : " + e.getMessage();
             request.setAttribute("errorMessage", message);
-            request.getRequestDispatcher("/formClient.jsp").forward(request, response);
+            request.getRequestDispatcher("/client_form.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {

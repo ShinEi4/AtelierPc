@@ -11,12 +11,20 @@ CREATE TABLE Marque(
    PRIMARY KEY(id_marque)
 );
 
+CREATE TABLE categorie_modele(
+   id_categorie_modele SERIAL,
+   nom_type VARCHAR(50) ,
+   PRIMARY KEY(id_categorie_modele)
+);
+
 CREATE TABLE Modele(
    id_modele SERIAL,
    nom VARCHAR(50) ,
    id_marque INTEGER NOT NULL,
+   id_categorie_modele INTEGER NOT NULL,
    PRIMARY KEY(id_modele),
-   FOREIGN KEY(id_marque) REFERENCES Marque(id_marque)
+   FOREIGN KEY(id_marque) REFERENCES Marque(id_marque),
+   FOREIGN KEY(id_categorie_modele) REFERENCES categorie_modele(id_modele)
 );
 
 CREATE TABLE Ordinateur(
@@ -34,6 +42,8 @@ CREATE TABLE Type_composant(
    nom_type VARCHAR(50) ,
    PRIMARY KEY(id_type_composant)
 );
+
+
 
 CREATE TABLE Technicien(
    id_technicien SERIAL,

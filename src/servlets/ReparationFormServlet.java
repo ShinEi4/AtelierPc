@@ -13,7 +13,11 @@ import javax.servlet.annotation.WebServlet;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.List;
+import models.Composant;
+import models.Ordinateur;
+import models.Technicien;
 
 @WebServlet("/reparationform")
 public class ReparationFormServlet extends HttpServlet {
@@ -48,8 +52,8 @@ public class ReparationFormServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Récupérer les paramètres du formulaire
-        Timestamp dateDebut = Timestamp.valueOf(request.getParameter("dateDebut"));
-        Timestamp dateFin = Timestamp.valueOf(request.getParameter("dateFin"));
+        String dateDebutParam = request.getParameter("dateDebut");
+        String dateFinParam = request.getParameter("dateFin");
         String descri = request.getParameter("descri");
         int technicienId = Integer.parseInt(request.getParameter("technicien"));
         int ordinateurId = Integer.parseInt(request.getParameter("ordinateur"));
@@ -57,13 +61,17 @@ public class ReparationFormServlet extends HttpServlet {
 
         // Récupérer la liste des composants sélectionnés
         String[] composantsIds = request.getParameterValues("composants");
+
+        Timestamp dateDebut = Timestamp.valueOf(dateDebutParam);
+        Timestamp dateFin = Timestamp.valueOf(dateFinParam);
         
         // Créer l'objet Reparation
-        Technicien technicien = new Technicien(technicienId); // Vous pouvez récupérer plus d'informations selon votre modèle
-        Ordinateur ordinateur = new Ordinateur(ordinateurId); // Idem pour ordinateur
-        Reparation reparation = new Reparation(dateDebut, dateFin, descri, technicien, ordinateur, prixMainDoeuvre);
+        
 
         try (Connection connexion = Connexion.getConnexion()) {
+            Technicien technicien = Technicien.getById(null, technicienId); // Vous pouvez récupérer plus d'informations selon votre modèle
+            Ordinateur ordinateur = Ordinateur.getById(null, ordinateurId); // Idem pour ordinateur
+            Reparation reparation = new Reparation(dateDebut, dateFin, descri, technicien, ordinateur, prixMainDoeuvre);
             // Sauvegarder la réparation dans la base
             reparation.save(connexion);
 
@@ -71,7 +79,7 @@ public class ReparationFormServlet extends HttpServlet {
             if (composantsIds != null) {
                 for (String composantId : composantsIds) {
                     int idComposant = Integer.parseInt(composantId);
-                    Composant composant = new Composant(idComposant); // Vous pouvez ajouter plus de détails sur le composant
+                    Composant composant = Composant.getById(null, idComposant); // Vous pouvez ajouter plus de détails sur le composant
                     reparation.ajouterComposant(composant, connexion);
                 }
             }

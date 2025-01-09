@@ -15,11 +15,12 @@ public class ReparationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         String typeComposant = request.getParameter("typeComposant");
-        List<TypeComposant> tc = TypeComposant.getAll(null); // Connexion à fournir
-        request.setAttribute("typescomposants", tc);
-        List<Reparation> reparations;
+        
 
         try {
+            List<TypeComposant> tc = TypeComposant.getAll(null); // Connexion à fournir
+            request.setAttribute("typescomposants", tc);
+            List<Reparation> reparations;
             // Si l'action est une recherche et qu'un paramètre typeComposant est fourni
             if ("recherche".equalsIgnoreCase(action) && typeComposant != null && !typeComposant.isEmpty()) {
                 reparations = Reparation.getByComposantType(null, typeComposant); // Connexion à fournir
