@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/modeleform")
@@ -33,12 +34,12 @@ public class ModeleFormServlet extends HttpServlet {
             request.setAttribute("composants", composants);
 
             // Redirection vers le formulaire JSP
-            request.getRequestDispatcher("/formModele.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/formModele.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Erreur lors de la préparation des données : " + e.getMessage());
-            request.getRequestDispatcher("/formModele.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {
@@ -60,10 +61,11 @@ public class ModeleFormServlet extends HttpServlet {
         Connection connexion = null;
 
         try {
+            // Validation des champs obligatoires
             if (nomModele == null || nomModele.trim().isEmpty() || idMarqueStr == null || idMarqueStr.isEmpty()) {
                 message = "Le nom du modèle et la marque sont obligatoires.";
                 request.setAttribute("errorMessage", message);
-                request.getRequestDispatcher("/formModele.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/formModele.jsp").forward(request, response);
                 return;
             }
 
@@ -73,16 +75,27 @@ public class ModeleFormServlet extends HttpServlet {
             // Récupération de la marque associée
             Marque marque = Marque.getById(connexion, idMarque);
 
+            if (marque == null) {
+                message = "La marque sélectionnée n'existe pas.";
+                request.setAttribute("errorMessage", message);
+                request.getRequestDispatcher("/WEB-INF/formModele.jsp").forward(request, response);
+                return;
+            }
+
             // Création du modèle
             Modele modele = new Modele(nomModele, marque);
 
             // Ajout des composants sélectionnés
             if (composantsIds != null) {
+                List<Composant> composants = new ArrayList<>();
                 for (String idComposantStr : composantsIds) {
                     int idComposant = Integer.parseInt(idComposantStr);
                     Composant composant = Composant.getById(connexion, idComposant);
-                    modele.getComposants().add(composant);
+                    if (composant != null) {
+                        composants.add(composant);
+                    }
                 }
+                modele.setComposants(composants);
             }
 
             // Sauvegarde du modèle dans la base de données
@@ -90,12 +103,15 @@ public class ModeleFormServlet extends HttpServlet {
 
             message = "Modèle ajouté avec succès !";
             request.setAttribute("successMessage", message);
-            response.sendRedirect("/ModeleFormServlet"); // Redirection pour éviter une double soumission
+
+            // Redirection pour éviter une double soumission
+            response.sendRedirect(request.getContextPath() + "/modeleform");
+
         } catch (Exception e) {
             e.printStackTrace();
             message = "Erreur lors de l'ajout du modèle : " + e.getMessage();
             request.setAttribute("errorMessage", message);
-            request.getRequestDispatcher("/formModele.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/formModele.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {
