@@ -3,10 +3,8 @@ package models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import utils.Connexion;
 
 public class TypeComposant {
@@ -65,6 +63,9 @@ public class TypeComposant {
 
     // Fonction getAll (Récupération de tous les types de composants)
     public static List<TypeComposant> getAll(Connection connexion) throws Exception {
+        if (connexion == null) {
+            connexion=Connexion.getConnexion();
+        }
         List<TypeComposant> types = new ArrayList<>();
         String sql = "SELECT * FROM type_composant";
         try (PreparedStatement stmt = connexion.prepareStatement(sql);

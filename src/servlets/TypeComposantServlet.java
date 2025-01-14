@@ -19,6 +19,6 @@ public class TypeComposantServlet extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors de la récupération des types de composants.");
         }
-        request.getRequestDispatcher("/WEB-INF/type_composant_list.jsp").forward(request, response);
+        request.getRequestDispatcher("type_composant_list.jsp").forward(request, response);
     }
 }
