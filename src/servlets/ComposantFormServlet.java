@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/ComposantFormServlet")
+@WebServlet("/composantform")
 public class ComposantFormServlet extends HttpServlet {
 
     @Override
@@ -27,11 +27,11 @@ public class ComposantFormServlet extends HttpServlet {
             request.setAttribute("typeComposants", typeComposants);
 
             // Rediriger vers la page JSP du formulaire
-            request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+            request.getRequestDispatcher("/composant_form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Erreur lors de la récupération des types de composants : " + e.getMessage());
-            request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+            request.getRequestDispatcher("/composant_form.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {
@@ -57,7 +57,7 @@ public class ComposantFormServlet extends HttpServlet {
             if (nom == null || nom.isEmpty() || prixStr == null || prixStr.isEmpty() || idTypeStr == null || idTypeStr.isEmpty()) {
                 message = "Tous les champs sont obligatoires.";
                 request.setAttribute("errorMessage", message);
-                request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+                request.getRequestDispatcher("/composant_form.jsp").forward(request, response);
                 return;
             }
 
@@ -76,12 +76,12 @@ public class ComposantFormServlet extends HttpServlet {
 
             message = "Composant ajouté avec succès !";
             request.setAttribute("successMessage", message);
-            request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+            request.getRequestDispatcher("/composant_form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             message = "Erreur lors de l'ajout du composant : " + e.getMessage();
             request.setAttribute("errorMessage", message);
-            request.getRequestDispatcher("/formComposant.jsp").forward(request, response);
+            request.getRequestDispatcher("/composant_form.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {

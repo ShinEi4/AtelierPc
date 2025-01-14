@@ -23,6 +23,6 @@ public class ComposantServlet extends HttpServlet {
             request.setAttribute("error", "Erreur lors de la récupération des composants.");
         }
 
-        request.getRequestDispatcher("/WEB-INF/composant_list.jsp").forward(request, response);
+        request.getRequestDispatcher("composant_list.jsp").forward(request, response);
     }
 }
