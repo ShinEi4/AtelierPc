@@ -18,7 +18,7 @@ public class ClientFormServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+        request.getRequestDispatcher("/client_form.jsp").forward(request, response);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ClientFormServlet extends HttpServlet {
         if (nom == null || nom.isEmpty() || num == null || num.isEmpty()) {
             message = "Les champs nom et numéro sont obligatoires.";
             request.setAttribute("errorMessage", message);
-            request.getRequestDispatcher("/formClient.jsp").forward(request, response);
+            request.getRequestDispatcher("/client_form.jsp").forward(request, response);
             return;
         }
 

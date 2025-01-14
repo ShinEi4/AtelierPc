@@ -53,8 +53,8 @@
                     <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>Atelier Ordinateur</h3>
                 </a>
                 <div class="navbar-nav w-100">
-                    <a href="/clientform" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Inserer Client</a>
-                    <a href="/clients" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Liste Client</a>
+                    <a href="/ReparationOrdi/clientform" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Inserer Client</a>
+                    <a href="/ReparationOrdi/clients" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Liste Client</a>
             </nav>
         </div>
         <!-- Sidebar End -->
