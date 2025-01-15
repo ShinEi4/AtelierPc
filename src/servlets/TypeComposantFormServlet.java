@@ -17,14 +17,7 @@ import java.util.List;
 public class TypeComposantFormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            List<TypeComposant> tc = TypeComposant.getAll(null); // Connexion à fournir
-            request.setAttribute("typescomposants", tc);
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Erreur lors de la récupération des types de composants.");
-        }
-        request.getRequestDispatcher("type_composant_list.jsp").forward(request, response);
+        request.getRequestDispatcher("type_composant_form.jsp").forward(request, response);
     }
     
     @Override

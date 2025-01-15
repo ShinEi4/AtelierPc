@@ -14,5 +14,6 @@ public class Connexion {
         Connection connex=DriverManager.getConnection("jdbc:postgresql://"+HOST+"/"+DATABASE, USER, PWD);
         connex.setAutoCommit(false);
         return connex;
+        
     }
 }

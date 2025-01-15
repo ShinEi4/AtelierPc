@@ -51,6 +51,10 @@
                 <div class="navbar-nav w-100">
                     <a href="/ReparationOrdi/clientform" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Inserer Client</a>
                     <a href="/ReparationOrdi/clients" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Liste Client</a>
+                    <a href="/ReparationOrdi/typecomposantform" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Inserer Type Comp</a>
+                    <a href="/ReparationOrdi/typescomposants" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Liste TypeComp</a>
+                    <a href="/ReparationOrdi/composantform" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Inserer Composants</a>
+                    <a href="/ReparationOrdi/composants" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Liste Composants</a>
             </nav>
         </div>
         <!-- Sidebar End -->

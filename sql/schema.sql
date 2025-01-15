@@ -100,3 +100,8 @@ CREATE TABLE Modele_composant(
    FOREIGN KEY(id_modele) REFERENCES Modele(id_modele),
    FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
 );
+
+CREATE TABLE Composant_recommande(
+   id_composant INTEGER,
+   date TIMESTAMP
+);
