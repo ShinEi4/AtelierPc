@@ -56,7 +56,6 @@ public class TypeComposant {
     
             connexion.commit();
         } catch (Exception e) {
-                System.out.println("foryyy");
                 connexion.rollback();
                 throw e;
         } finally {
