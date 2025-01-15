@@ -46,20 +46,24 @@ public class TypeComposant {
     // Fonction save (Insertion dans la base)
     public void save(Connection connexion) throws Exception {
         if (connexion == null) {
-            connexion=Connexion.getConnexion();
+            connexion = Connexion.getConnexion();
         }
-        String sql = "INSERT INTO type_composant (nom_type) VALUES (?) RETURNING id_type_composant";
-        try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
-            stmt.setString(1, this.nomType);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    this.idTypeComposant = rs.getInt("id_type_composant");
-                    connexion.commit();
-                    connexion.close();
-                }
-            }
+        String sqlInsert = "INSERT INTO type_composant (nom_type) VALUES (?)";
+    
+        try (PreparedStatement stmtInsert = connexion.prepareStatement(sqlInsert)) {
+            stmtInsert.setString(1, this.nomType);
+            stmtInsert.executeUpdate();
+    
+            connexion.commit();
+        } catch (Exception e) {
+                System.out.println("foryyy");
+                connexion.rollback();
+                throw e;
+        } finally {
+            connexion.close();
         }
     }
+    
 
     // Fonction getAll (Récupération de tous les types de composants)
     public static List<TypeComposant> getAll(Connection connexion) throws Exception {

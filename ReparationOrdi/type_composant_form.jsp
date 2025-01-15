@@ -84,7 +84,7 @@
                                 <div class="mb-3">
                                     <label for="nom" class="form-label">Nom du type composant</label>
                                     <input type="text" class="form-control" id="nom"
-                                        aria-describedby="emailHelp" name="nom">
+                                        aria-describedby="emailHelp" name="nomType">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Valider</button>
                             </form>

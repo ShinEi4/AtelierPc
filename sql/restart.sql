@@ -31,7 +31,7 @@ CREATE TABLE Modele(
    id_categorie_modele INTEGER NOT NULL,
    PRIMARY KEY(id_modele),
    FOREIGN KEY(id_marque) REFERENCES Marque(id_marque),
-   FOREIGN KEY(id_categorie_modele) REFERENCES categorie_modele(id_modele)
+   FOREIGN KEY(id_categorie_modele) REFERENCES categorie_modele(id_categorie_modele)
 );
 
 CREATE TABLE Ordinateur(

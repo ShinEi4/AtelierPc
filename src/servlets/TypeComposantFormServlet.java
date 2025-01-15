@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 @WebServlet("/typecomposantform")
 public class TypeComposantFormServlet extends HttpServlet {
@@ -42,12 +41,12 @@ public class TypeComposantFormServlet extends HttpServlet {
 
             message = "Type de composant ajouté avec succès !";
             request.setAttribute("successMessage", message);
-            request.getRequestDispatcher("type_composant_form.jsp").forward(request, response);
+            request.getRequestDispatcher("/type_composant_form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             message = "Erreur lors de l'ajout du type de composant : " + e.getMessage();
             request.setAttribute("errorMessage", message);
-            request.getRequestDispatcher("type_composant_form.jsp").forward(request, response);
+            request.getRequestDispatcher("/type_composant_list.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {
