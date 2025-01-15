@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS Modele CASCADE;
 DROP TABLE IF EXISTS Client CASCADE;
 DROP TABLE IF EXISTS Marque CASCADE;
 DROP TABLE IF EXISTS Type_composant CASCADE;
+DROP TABLE IF EXISTS Composant_recommande CASCADE;
 
 CREATE TABLE Client(
    id_client SERIAL,
@@ -111,3 +112,15 @@ CREATE TABLE Modele_composant(
    FOREIGN KEY(id_modele) REFERENCES Modele(id_modele),
    FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
 );
+
+
+CREATE TABLE Composant_recommande(
+   id_composant INTEGER,
+   date DATE
+);
+
+CREATE OR REPLACE VIEW v_retour AS
+SELECT * 
+FROM Reparation
+WHERE date_fin IS NOT NULL;
+

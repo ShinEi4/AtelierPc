@@ -4,6 +4,7 @@
 <%@page import="java.util.List" %>
 <%
     List<TypeComposant> typescomposants=(List<TypeComposant>)request.getAttribute("typescomposants");
+    List<Composant> composants=(List<Composant>)request.getAttribute("composants");
 %>
   <head>
     <meta charset="UTF-8" />
@@ -252,6 +253,33 @@
                         <button type="submit" class="btn btn-primary">Valider</button>
                         </form>
                     </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Recommander un Composant</h4>
+                        </div>
+                        <div class="card-body">
+                            <form action="/ReparationOrdi/composantform" method="post">
+                                <input type="hidden" name="action" value="recommander">
+                                <div class="form-group">
+                                    <label for="composant">Composant</label>
+                                    <select class="form-select form-control" id="composant" name="composant" required>
+                                        <% for(Composant composant : composants) { %>
+                                            <option value="<%= composant.getIdComposant() %>">
+                                                <%= composant.getNom() + " - " + composant.getTypeComposant().getNomType() %>
+                                            </option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dateRecommandation">Date de recommandation</label>
+                                    <input type="date" class="form-control" id="dateRecommandation" name="dateRecommandation" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Recommander</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 </div>

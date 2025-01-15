@@ -233,6 +233,18 @@
                       <h4 class="card-title">Composants enregistres</h4>
                     </div>
                     <div class="card-body">
+                      <div class="card">
+                        <div class="card-body">
+                          <form action="/ReparationOrdi/composants" method="get" class="form-inline">
+                            <input type="hidden" name="action" value="recherche_recommandes">
+                            <div class="form-group mx-sm-3 mb-2">
+                              <label for="moisRecherche" class="mr-2">Mois : </label>
+                              <input type="month" class="form-control" id="moisRecherche" name="moisRecherche" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2">Rechercher</button>
+                          </form>
+                        </div>
+                      </div>
                       <div class="table-responsive">
                         <table class="table">
                           <thead>
@@ -240,14 +252,20 @@
                               <th>#</th>
                               <th>Nom</th>
                               <th>Type Composant</th>
+                              <th>Recommandé</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <% for(Composant composant : composants) { %>
-                            <tr>
+                            <% 
+                            List<Integer> composantsRecommandes = (List<Integer>)request.getAttribute("composantsRecommandes");
+                            for(Composant composant : composants) { 
+                                boolean isRecommande = composantsRecommandes != null && composantsRecommandes.contains(composant.getIdComposant());
+                            %>
+                            <tr class="<%= isRecommande ? "table-success" : "" %>">
                               <td><%= composant.getIdComposant() %></td>
                               <td><%= composant.getNom() %></td>
                               <td><%= composant.getTypeComposant().getNomType() %></td>
+                              <td><%= isRecommande ? "Oui" : "Non" %></td>
                             </tr>
                             <% } %>
                           </tbody>

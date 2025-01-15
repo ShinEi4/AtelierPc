@@ -309,7 +309,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="probleme">Problème</label>
+                                    <label for="probleme">Probleme</label>
                                     <textarea class="form-control" id="probleme" name="probleme" rows="3" required></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Ajouter le Composant</button>

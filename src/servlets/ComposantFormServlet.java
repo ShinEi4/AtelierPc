@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,7 +26,9 @@ public class ComposantFormServlet extends HttpServlet {
             connexion = Connexion.getConnexion();
             // Récupérer tous les TypeComposant pour les afficher dans le select
             List<TypeComposant> typesComposants = TypeComposant.getAll(connexion);
+            List<Composant> composants = Composant.getAll(connexion);
             request.setAttribute("typescomposants", typesComposants);
+            request.setAttribute("composants", composants);
 
             request.getRequestDispatcher("composant_form.jsp").forward(request, response);
         } catch (Exception e) {
@@ -44,11 +48,28 @@ public class ComposantFormServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nom = request.getParameter("nom");
-        String idTypeStr = request.getParameter("typecomposant");
-        Connection connexion = null;
+        try (Connection connexion = Connexion.getConnexion()) {
+            String action = request.getParameter("action");
+            
+            if ("recommander".equals(action)) {
+                int idComposant = Integer.parseInt(request.getParameter("composant"));
+                Date dateRecommandation = Date.valueOf(request.getParameter("dateRecommandation"));
+                
+                String sql = "INSERT INTO composant_recommande (id_composant, date) VALUES (?, ?)";
+                try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
+                    stmt.setInt(1, idComposant);
+                    stmt.setDate(2, dateRecommandation);
+                    stmt.executeUpdate();
+                    connexion.commit();
+                }
+                
+                response.sendRedirect(request.getContextPath() + "/composants");
+                return;
+            }
+            
+            String nom = request.getParameter("nom");
+            String idTypeStr = request.getParameter("typecomposant");
 
-        try {
             // Validation des champs
             if (nom == null || nom.trim().isEmpty() || idTypeStr == null || idTypeStr.trim().isEmpty()) {
                 // Utiliser SweetAlert pour l'erreur
@@ -58,7 +79,6 @@ public class ComposantFormServlet extends HttpServlet {
                 return;
             }
 
-            connexion = Connexion.getConnexion();
             int idTypeComposant = Integer.parseInt(idTypeStr);
 
             // Récupérer le type composant
@@ -79,18 +99,8 @@ public class ComposantFormServlet extends HttpServlet {
             
         } catch (Exception e) {
             e.printStackTrace();
-            // SweetAlert pour l'erreur
-            String script = "<script>swal('Erreur!', 'Erreur lors de l'ajout du composant : " + e.getMessage() + "', {icon: 'error', buttons: {confirm: {className: 'btn btn-danger'}}});</script>";
-            request.setAttribute("sweetAlertScript", script);
-            doGet(request, response);
-        } finally {
-            if (connexion != null) {
-                try {
-                    connexion.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Erreur lors de l'opération: " + e.getMessage());
         }
     }
 }

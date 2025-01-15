@@ -262,7 +262,7 @@ public class Reparation {
                     "FROM reparation r " +
                     "JOIN reparation_composant rc ON r.id_reparation = rc.id_reparation " +
                     "JOIN composant c ON rc.id_composant = c.id_composant " +
-                    "WHERE c.type_composant = ?";
+                    "WHERE c.id_type_composant = ?";
 
         try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
             stmt.setString(1, typeComposant);
@@ -300,21 +300,21 @@ public class Reparation {
     
         List<Reparation> reparations = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-            "SELECT DISTINCT r.* " +
+            "SELECT r.* " +
             "FROM v_retour r " +
+            "JOIN ordinateur o ON r.id_ordinateur = o.id_ordinateur " +
+            "JOIN modele m ON o.id_modele = m.id_modele " +
+            "JOIN categorie_modele cm ON cm.id_categorie_modele = m.id_categorie_modele " +
             "JOIN reparation_composant rc ON r.id_reparation = rc.id_reparation " +
             "JOIN composant c ON rc.id_composant = c.id_composant " +
-            "JOIN modele_composant mc ON c.id_composant = mc.id_composant " +
-            "JOIN modele m ON mc.id_modele = m.id_modele " +
-            "JOIN categorie_modele cm ON m.id_categorie_modele = cm.id_categorie_modele "
+            "JOIN type_composant tc ON tc.id_type_composant = c.id_type_composant "
         );
     
         // Ajout des conditions dynamiques
         List<Object> params = new ArrayList<>();
         boolean whereAdded = false;
-    
         if (typeComposant != null && !typeComposant.isEmpty()) {
-            sql.append("WHERE c.id_type_composant = ? ");
+            sql.append("WHERE tc.id_type_composant = ? ");
             params.add(typeComposant);
             whereAdded = true;
         }

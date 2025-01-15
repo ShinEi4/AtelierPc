@@ -103,5 +103,5 @@ CREATE TABLE Modele_composant(
 
 CREATE TABLE Composant_recommande(
    id_composant INTEGER,
-   date TIMESTAMP
+   date DATE
 );
