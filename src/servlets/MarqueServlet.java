@@ -24,6 +24,6 @@ public class MarqueServlet extends HttpServlet {
         }
 
         // Rediriger vers la page de liste des marques
-        request.getRequestDispatcher("/WEB-INF/marque_list.jsp").forward(request, response);
+        request.getRequestDispatcher("marque_list.jsp").forward(request, response);
     }
 }

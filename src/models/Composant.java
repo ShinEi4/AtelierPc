@@ -12,25 +12,22 @@ public class Composant {
     private int idComposant;
     private String nom;
     private TypeComposant typeComposant; // Association avec la classe TypeComposant
-    private double prix;
 
     // Constructeur vide
     public Composant() {
     }
 
     // Constructeur avec id
-    public Composant(int idComposant, String nom, TypeComposant typeComposant, double prix) {
+    public Composant(int idComposant, String nom, TypeComposant typeComposant) {
         this.idComposant = idComposant;
         this.nom = nom;
         this.typeComposant = typeComposant;
-        this.prix = prix;
     }
 
     // Constructeur sans id
-    public Composant(String nom, TypeComposant typeComposant,double prix) {
+    public Composant(String nom, TypeComposant typeComposant) {
         this.nom = nom;
         this.typeComposant = typeComposant;
-        this.prix = prix;
     }
 
     // Getters et setters
@@ -56,14 +53,6 @@ public class Composant {
 
     public void setTypeComposant(TypeComposant typeComposant) {
         this.typeComposant = typeComposant;
-    }
-
-    public double getPrix() {
-        return prix;
-    }
-
-    public void setPrix(double prix) {
-        this.prix = prix;
     }
 
     // Fonction save (Insertion dans la base)
@@ -102,8 +91,7 @@ public class Composant {
                 Composant composant = new Composant(
                         rs.getInt("id_composant"),
                         rs.getString("nom"),
-                        typeComposant,
-                        rs.getDouble("prix")   
+                        typeComposant
                 );
                 composants.add(composant);
             }
@@ -126,8 +114,7 @@ public class Composant {
                     return new Composant(
                             rs.getInt("id_composant"),
                             rs.getString("nom"),
-                            typeComposant,
-                            rs.getDouble("prix")
+                            typeComposant
                     );
                 }
             }

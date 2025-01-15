@@ -3,10 +3,8 @@ package models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import utils.Connexion;
 
 public class Marque {
@@ -51,7 +49,7 @@ public class Marque {
             connexion=Connexion.getConnexion();
         }
         String sql;
-            sql = "INSERT INTO marque (nom_marque) VALUES (?) RETURNING id_marque";
+            sql = "INSERT INTO marque (nom) VALUES (?) RETURNING id_marque";
             try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
                 stmt.setString(1, this.nomMarque);
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -76,7 +74,7 @@ public class Marque {
             while (rs.next()) {
                 Marque marque = new Marque(
                         rs.getInt("id_marque"),
-                        rs.getString("nom_marque")
+                        rs.getString("nom")
                 );
                 marques.add(marque);
             }
@@ -95,7 +93,7 @@ public class Marque {
             while (rs.next()) {
                 Marque marque = new Marque(
                         rs.getInt("id_marque"),
-                        rs.getString("nom_marque")
+                        rs.getString("nom")
                 );
                 marques.add(marque);
             }
@@ -115,7 +113,7 @@ public class Marque {
                 if (rs.next()) {
                     return new Marque(
                             rs.getInt("id_marque"),
-                            rs.getString("nom_marque")
+                            rs.getString("nom")
                     );
                 }
             }

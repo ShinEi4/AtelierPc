@@ -18,35 +18,35 @@ public class MarqueFormServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+        request.getRequestDispatcher("marque_form.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nomMarque = request.getParameter("nomMarque");
+        String nom = request.getParameter("nom");
         String message;
         Connection connexion = null;
 
         try {
-            if (nomMarque == null || nomMarque.trim().isEmpty()) {
+            if (nom == null || nom.trim().isEmpty()) {
                 message = "Le nom de la marque est obligatoire.";
                 request.setAttribute("errorMessage", message);
-                request.getRequestDispatcher("/formMarque.jsp").forward(request, response);
+                doGet(request, response);
                 return;
             }
 
             connexion = Connexion.getConnexion();
-            Marque marque = new Marque(nomMarque);
+            Marque marque = new Marque(nom);
             marque.save(connexion);
 
             message = "Marque ajoutée avec succès !";
             request.setAttribute("successMessage", message);
-            request.getRequestDispatcher("/formMarque.jsp").forward(request, response);
+            doGet(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             message = "Erreur lors de l'ajout de la marque : " + e.getMessage();
             request.setAttribute("errorMessage", message);
-            request.getRequestDispatcher("/formMarque.jsp").forward(request, response);
+            doGet(request, response);
         } finally {
             if (connexion != null) {
                 try {
