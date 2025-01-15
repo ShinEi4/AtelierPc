@@ -20,6 +20,6 @@ public class OrdinateurServlet extends HttpServlet{
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors de la récupération des ordinateurs.");
         }
-        request.getRequestDispatcher("/WEB-INF/ordinateur_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/ordinateur_list.jsp").forward(request, response);
     }
 }

@@ -112,6 +112,12 @@
                         <span class="sub-item">Technicien</span>
                       </a>
                     </li>
+                    <li>
+                      <a href="/ReparationOrdi/categorieform">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="sub-item">Categorie Modele</span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -177,6 +183,12 @@
                       <a href="/ReparationOrdi/techniciens">
                         <i class="fas fa-user-cog"></i>
                         <span class="sub-item">Techniciens</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/ReparationOrdi/categoriesmodeles">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="sub-item">Categorie Modele</span>
                       </a>
                     </li>
                   </ul>

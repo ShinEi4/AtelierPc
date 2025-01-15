@@ -5,11 +5,9 @@ import models.Modele;
 import models.Ordinateur;
 import utils.Connexion;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -32,12 +30,12 @@ public class OrdinateurFormServlet extends HttpServlet {
             request.setAttribute("clients", clients);
 
             // Redirection vers la page JSP du formulaire
-            request.getRequestDispatcher("/formOrdinateur.jsp").forward(request, response);
+            request.getRequestDispatcher("ordinateur_form.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors du chargement des données pour le formulaire : " + e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.getRequestDispatcher("ordinateur_form.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {
@@ -55,9 +53,9 @@ public class OrdinateurFormServlet extends HttpServlet {
             connexion = Connexion.getConnexion();
 
             // Récupération des données du formulaire
-            String idSerie = request.getParameter("idSerie");
-            int idModele = Integer.parseInt(request.getParameter("idModele"));
-            int idClient = Integer.parseInt(request.getParameter("idClient"));
+            String idSerie = request.getParameter("id_serie");
+            int idModele = Integer.parseInt(request.getParameter("id_modele"));
+            int idClient = Integer.parseInt(request.getParameter("id_client"));
 
             // Validation des champs obligatoires
             if (idSerie == null || idSerie.trim().isEmpty() || idModele <= 0 || idClient <= 0) {
@@ -77,12 +75,12 @@ public class OrdinateurFormServlet extends HttpServlet {
             ordinateur.save(connexion);
 
             // Redirection après succès
-            response.sendRedirect(request.getContextPath() + "/ordinateurs");
+            doGet(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors de la soumission du formulaire : " + e.getMessage());
-            request.getRequestDispatcher("/formOrdinateur.jsp").forward(request, response);
+            doGet(request, response);
         } finally {
             if (connexion != null) {
                 try {

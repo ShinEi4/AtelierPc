@@ -203,7 +203,7 @@
         <div class="content">
           <div class="page-inner">
             <div class="page-header">
-              <h4 class="page-title">Composant List</h4>
+              <h4 class="page-title">Modele List</h4>
               <ul class="breadcrumbs">
                 <li class="nav-home">
                   <a href="index.jsp">
@@ -214,7 +214,7 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">Composant</a>
+                  <a href="#">Modele</a>
                 </li>
                 <li class="separator">
                   <i class="icon-arrow-right"></i>
