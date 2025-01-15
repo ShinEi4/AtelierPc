@@ -123,25 +123,18 @@ public class Reparation {
             stmt.setInt(5, this.ordinateur.getIdOrdinateur());
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    connexion.commit();
                     this.idReparation = rs.getInt("id_reparation");
+                    connexion.commit();
                 }
             }
         }
-
-        // Insertion des composants associés à cette réparation dans la table Reparation_composant
-        if (this.composants != null && !this.composants.isEmpty()) {
-            for (Composant composant : composants) {
-                String insertComposantSql = "INSERT INTO reparation_composant (id_composant, id_reparation) VALUES (?, ?)";
-                try (PreparedStatement stmtComposant = connexion.prepareStatement(insertComposantSql)) {
-                    stmtComposant.setInt(1, composant.getIdComposant());
-                    stmtComposant.setInt(2, this.idReparation);
-                    stmtComposant.executeUpdate();
-                }
-                connexion.commit();
-            }
+        catch (Exception e) {
+            connexion.rollback();
+            throw e;
+        } 
+        finally {
+            connexion.close();
         }
-        connexion.close();
     }
     
     public void ajouterComposant(Composant composant, Connection connexion) throws Exception {

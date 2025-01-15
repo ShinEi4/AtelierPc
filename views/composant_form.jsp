@@ -45,150 +45,162 @@
         
         <div class="sidebar" data-background-color="dark">
         <div class="sidebar-wrapper scrollbar scrollbar-inner">
-            <div class="sidebar-content">
+          <div class="sidebar-content">
             <div class="user">
-                <div class="info">
+              <div class="info">
                 <h3 class="text-center text-primary"><i class="fas fa-tools me-2"></i>Atelier Ordinateur</h3>
-                </div>
+              </div>
             </div>
             <ul class="nav nav-secondary">
-                <!-- Menu Insertions -->
-                <li class="nav-item">
+              <!-- Menu Insertions -->
+              <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#insertions">
-                    <i class="fas fa-plus-circle"></i>
-                    <p>Insertions</p>
-                    <span class="caret"></span>
+                  <i class="fas fa-plus-circle"></i>
+                  <p>Insertions</p>
+                  <span class="caret"></span>
                 </a>
                 <div class="collapse" id="insertions">
-                    <ul class="nav nav-collapse">
+                  <ul class="nav nav-collapse">
                     <li>
-                        <a href="/ReparationOrdi/clientform">
+                      <a href="/ReparationOrdi/clientform">
                         <i class="fas fa-user-plus"></i>
                         <span class="sub-item">Client</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/typecomposantform">
+                      <a href="/ReparationOrdi/typecomposantform">
                         <i class="fas fa-microchip"></i>
                         <span class="sub-item">Type Composant</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/composantform">
+                      <a href="/ReparationOrdi/composantform">
                         <i class="fas fa-memory"></i>
                         <span class="sub-item">Composant</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/marqueform">
+                      <a href="/ReparationOrdi/marqueform">
                         <i class="fas fa-trademark"></i>
                         <span class="sub-item">Marque</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/modeleform">
+                      <a href="/ReparationOrdi/modeleform">
                         <i class="fas fa-laptop"></i>
                         <span class="sub-item">Modele</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/ordinateurform">
+                      <a href="/ReparationOrdi/ordinateurform">
                         <i class="fas fa-desktop"></i>
                         <span class="sub-item">Ordinateur</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/reparationform">
+                      <a href="/ReparationOrdi/reparationform">
                         <i class="fas fa-wrench"></i>
                         <span class="sub-item">Reparation</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/stockform">
+                      <a href="/ReparationOrdi/stockform">
                         <i class="fas fa-warehouse"></i>
                         <span class="sub-item">Stock</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/technicienform">
+                      <a href="/ReparationOrdi/technicienform">
                         <i class="fas fa-user-cog"></i>
                         <span class="sub-item">Technicien</span>
-                        </a>
+                      </a>
                     </li>
-                    </ul>
+                    <li>
+                      <a href="/ReparationOrdi/categorieform">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="sub-item">Categorie Modele</span>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-                </li>
+              </li>
 
-                <!-- Menu Listes -->
-                <li class="nav-item">
+              <!-- Menu Listes -->
+              <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#listes">
-                    <i class="fas fa-list"></i>
-                    <p>Listes</p>
-                    <span class="caret"></span>
+                  <i class="fas fa-list"></i>
+                  <p>Listes</p>
+                  <span class="caret"></span>
                 </a>
                 <div class="collapse" id="listes">
-                    <ul class="nav nav-collapse">
+                  <ul class="nav nav-collapse">
                     <li>
-                        <a href="/ReparationOrdi/clients">
+                      <a href="/ReparationOrdi/clients">
                         <i class="fas fa-users"></i>
                         <span class="sub-item">Clients</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/typescomposants">
+                      <a href="/ReparationOrdi/typescomposants">
                         <i class="fas fa-microchip"></i>
                         <span class="sub-item">Types Composants</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/composants">
+                      <a href="/ReparationOrdi/composants">
                         <i class="fas fa-memory"></i>
                         <span class="sub-item">Composants</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/marques">
+                      <a href="/ReparationOrdi/marques">
                         <i class="fas fa-trademark"></i>
                         <span class="sub-item">Marques</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/modeles">
+                      <a href="/ReparationOrdi/modeles">
                         <i class="fas fa-laptop"></i>
                         <span class="sub-item">Modeles</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/ordinateurs">
+                      <a href="/ReparationOrdi/ordinateurs">
                         <i class="fas fa-desktop"></i>
                         <span class="sub-item">Ordinateurs</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/reparations">
+                      <a href="/ReparationOrdi/reparations">
                         <i class="fas fa-wrench"></i>
                         <span class="sub-item">Reparations</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/stocks">
+                      <a href="/ReparationOrdi/stocks">
                         <i class="fas fa-warehouse"></i>
                         <span class="sub-item">Stocks</span>
-                        </a>
+                      </a>
                     </li>
                     <li>
-                        <a href="/ReparationOrdi/techniciens">
+                      <a href="/ReparationOrdi/techniciens">
                         <i class="fas fa-user-cog"></i>
                         <span class="sub-item">Techniciens</span>
-                        </a>
+                      </a>
                     </li>
-                    </ul>
+                    <li>
+                      <a href="/ReparationOrdi/categoriesmodeles">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="sub-item">Categorie Modele</span>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-                </li>
+              </li>
             </ul>
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
 
         <div class="main-panel">
         <div class="content">
@@ -262,8 +274,6 @@
 
     <!-- Kaiadmin JS -->
     <script src="assets/js/kaiadmin.min.js"></script>
-    <% if (request.getAttribute("sweetAlertScript") != null) { %>
-        <%= request.getAttribute("sweetAlertScript") %>
-    <% } %>
+    
   </body>
 </html>

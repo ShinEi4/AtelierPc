@@ -3,11 +3,10 @@ package servlets;
 import models.Technicien;
 import utils.Connexion;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -18,7 +17,7 @@ public class TechnicienFormServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+        request.getRequestDispatcher("/technicien_form.jsp").forward(request, response);
     }
 
     @Override
@@ -39,13 +38,11 @@ public class TechnicienFormServlet extends HttpServlet {
             Technicien technicien = new Technicien(nom);
             technicien.save(connexion);
 
-            // Redirection après succès
-            response.sendRedirect(request.getContextPath() + "/technicienForm");
-
+            request.getRequestDispatcher("/technicien_form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors de l'ajout du technicien : " + e.getMessage());
-            request.getRequestDispatcher("/formTechnicien.jsp").forward(request, response);
+            request.getRequestDispatcher("/technicien_form.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {

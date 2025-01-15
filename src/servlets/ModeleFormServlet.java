@@ -31,17 +31,17 @@ public class ModeleFormServlet extends HttpServlet {
             List<Marque> marques = Marque.getAll(connexion);
             request.setAttribute("marques", marques);
 
-            // Récupération des composants disponibles
-            List<Composant> composants = Composant.getAll(connexion);
-            request.setAttribute("composants", composants);
+            // Récupération des categories disponibles
+            List<CategorieModele> categoriesmodeles = CategorieModele.getAll(connexion);
+            request.setAttribute("categoriesmodeles", categoriesmodeles);
 
             // Redirection vers le formulaire JSP
-            request.getRequestDispatcher("/WEB-INF/formModele.jsp").forward(request, response);
+            request.getRequestDispatcher("modele_form.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Erreur lors de la préparation des données : " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);
+            request.getRequestDispatcher("modele_form.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {
@@ -55,10 +55,9 @@ public class ModeleFormServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nomModele = request.getParameter("nomModele");
-        String idMarqueStr = request.getParameter("idMarque");
-        String idCategorie= request.getParameter("idCategorieModele");
-        String[] composantsIds = request.getParameterValues("composants");
+        String nomModele = request.getParameter("nom");
+        String idMarqueStr = request.getParameter("marque");
+        String idCategorie= request.getParameter("categorie");
 
         String message;
         Connection connexion = null;
@@ -68,7 +67,7 @@ public class ModeleFormServlet extends HttpServlet {
             if (nomModele == null || nomModele.trim().isEmpty() || idMarqueStr == null || idMarqueStr.isEmpty()  || idCategorie == null || idCategorie.isEmpty()) {
                 message = "Le nom du modèle , la marque et la categorie sont obligatoires.";
                 request.setAttribute("errorMessage", message);
-                request.getRequestDispatcher("/WEB-INF/modele_form.jsp").forward(request, response);
+                request.getRequestDispatcher("modele_form.jsp").forward(request, response);
                 return;
             }
 
@@ -82,25 +81,12 @@ public class ModeleFormServlet extends HttpServlet {
             if (marque == null) {
                 message = "La marque sélectionnée n'existe pas.";
                 request.setAttribute("errorMessage", message);
-                request.getRequestDispatcher("/WEB-INF/modele_form.jsp").forward(request, response);
+                request.getRequestDispatcher("modele_form.jsp").forward(request, response);
                 return;
             }
 
             // Création du modèle
             Modele modele = new Modele(nomModele, marque,cm);
-
-            // Ajout des composants sélectionnés
-            if (composantsIds != null) {
-                List<Composant> composants = new ArrayList<>();
-                for (String idComposantStr : composantsIds) {
-                    int idComposant = Integer.parseInt(idComposantStr);
-                    Composant composant = Composant.getById(connexion, idComposant);
-                    if (composant != null) {
-                        composants.add(composant);
-                    }
-                }
-                modele.setComposants(composants);
-            }
 
             // Sauvegarde du modèle dans la base de données
             modele.save(connexion);
@@ -115,7 +101,7 @@ public class ModeleFormServlet extends HttpServlet {
             e.printStackTrace();
             message = "Erreur lors de l'ajout du modèle : " + e.getMessage();
             request.setAttribute("errorMessage", message);
-            request.getRequestDispatcher("/WEB-INF/formModele.jsp").forward(request, response);
+            request.getRequestDispatcher("modele_form.jsp").forward(request, response);
         } finally {
             if (connexion != null) {
                 try {

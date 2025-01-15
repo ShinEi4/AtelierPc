@@ -40,7 +40,7 @@ public class ReparationFormServlet extends HttpServlet {
             request.setAttribute("composants", composants);
             
             // Rediriger vers la page du formulaire de réparation
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/reparationForm.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("reparation_form.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,15 +74,6 @@ public class ReparationFormServlet extends HttpServlet {
             Reparation reparation = new Reparation(dateDebut, dateFin, descri, technicien, ordinateur, prixMainDoeuvre);
             // Sauvegarder la réparation dans la base
             reparation.save(connexion);
-
-            // Ajouter les composants sélectionnés
-            if (composantsIds != null) {
-                for (String composantId : composantsIds) {
-                    int idComposant = Integer.parseInt(composantId);
-                    Composant composant = Composant.getById(null, idComposant); // Vous pouvez ajouter plus de détails sur le composant
-                    reparation.ajouterComposant(composant, connexion);
-                }
-            }
 
             // Rediriger vers une page de confirmation ou la liste des réparations
             response.sendRedirect(request.getContextPath() + "/reparations");

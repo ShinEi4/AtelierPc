@@ -28,7 +28,7 @@ public class ModeleServlet extends HttpServlet {
             request.setAttribute("modeles", modeles);
 
             // Forward vers la vue (ex. une JSP pour afficher les modèles)
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/modeles.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("modele_list.jsp");
             dispatcher.forward(request, response);
 
         } catch (Exception e) {
@@ -37,7 +37,7 @@ public class ModeleServlet extends HttpServlet {
             request.setAttribute("error", "Erreur lors de la récupération des modèles : " + e.getMessage());
 
             // Redirection vers une page d'erreur ou un message d'erreur dans la vue
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/error.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("modele_list.jsp");
             dispatcher.forward(request, response);
 
         } finally {

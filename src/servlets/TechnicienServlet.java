@@ -22,6 +22,6 @@ public class TechnicienServlet extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("error", "Erreur lors de la récupération des techniciens.");
         }
-        request.getRequestDispatcher("/WEB-INF/technicien_list.jsp").forward(request, response);
+        request.getRequestDispatcher("technicien_list.jsp").forward(request, response);
     }
 }
