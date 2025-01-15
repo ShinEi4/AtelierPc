@@ -239,16 +239,16 @@
                     <div class="card-body">
                         <form action="/ReparationOrdi/reparationform" method="post">
                         <div class="form-group">
-                            <label for="dateDebut">Date de début</label>
-                            <input type="date" class="form-control" id="dateDebut" name="dateDebut" required>
+                            <label for="dateDebut">Date de debut</label>
+                            <input type="datetime-local"  class="form-control" id="dateDebut" name="dateDebut" required>
                         </div>
                         <div class="form-group">
                             <label for="dateFin">Date de fin</label>
-                            <input type="date" class="form-control" id="dateFin" name="dateFin" required>
+                            <input type="datetime-local"  class="form-control" id="dateFin" name="dateFin" required>
                         </div>
                         <div class="form-group">
                             <label for="descri">Description</label>
-                            <input type="text" class="form-control" id="descri" name="descri" placeholder="Entrer la description de la réparation" required>
+                            <input type="text" class="form-control" id="descri" name="descri" placeholder="Entrer la description de la reparation" required>
                         </div>
                         <div class="form-group">
                             <label for="technicien">Technicien</label>
@@ -262,7 +262,7 @@
                             <label for="ordinateur">Ordinateur</label>
                             <select class="form-select form-control" id="ordinateur" name="ordinateur">
                             <% for(Ordinateur ordinateur : ordinateurs) { %>
-                                <option value="<%= ordinateur.getIdOrdinateur() %>"><%= ordinateur.getNom() %></option>
+                                <option value="<%= ordinateur.getIdOrdinateur() %>"><%= ordinateur.getModele().getNom()+" "+ordinateur.getIdSerie() %></option>
                             <% } %>
                             </select>
                         </div>
@@ -273,6 +273,48 @@
                         <button type="submit" class="btn btn-primary">Valider</button>
                         </form>
                     </div>
+                    </div>
+                </div>
+
+                <!-- Nouveau formulaire pour Reparation_composant -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Ajouter des Composants a une Reparation</h4>
+                        </div>
+                        <div class="card-body">
+                            <form action="/ReparationOrdi/reparationcomposant" method="post">
+                                <div class="form-group">
+                                    <label for="reparation">Reparation</label>
+                                    <select class="form-select form-control" id="reparation" name="reparation" required>
+                                        <% List<Reparation> reparations = (List<Reparation>)request.getAttribute("reparations");
+                                        for(Reparation reparation : reparations) { %>
+                                            <option value="<%= reparation.getIdReparation() %>">
+                                                <%= "Reparation #" + reparation.getIdReparation() + " - " + 
+                                                    reparation.getOrdinateur().getIdSerie() + " - " +
+                                                    reparation.getDateDebut() %>
+                                            </option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="composant">Composant</label>
+                                    <select class="form-select form-control" id="composant" name="composant" required>
+                                        <% List<Composant> composants = (List<Composant>)request.getAttribute("composants");
+                                        for(Composant composant : composants) { %>
+                                            <option value="<%= composant.getIdComposant() %>">
+                                                <%= composant.getNom() + " - " + composant.getTypeComposant().getNomType() %>
+                                            </option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="probleme">Problème</label>
+                                    <textarea class="form-control" id="probleme" name="probleme" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Ajouter le Composant</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 </div>

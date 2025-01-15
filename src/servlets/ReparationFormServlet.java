@@ -25,7 +25,6 @@ public class ReparationFormServlet extends HttpServlet {
     // Affiche le formulaire de réparation
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Récupérer les données pour les sélecteurs (techniciens, ordinateurs, composants)
         try (Connection connexion = Connexion.getConnexion()) {
             // Charger la liste des techniciens
             List<Technicien> techniciens = Technicien.getAll(connexion);
@@ -39,47 +38,48 @@ public class ReparationFormServlet extends HttpServlet {
             List<Composant> composants = Composant.getAll(connexion);
             request.setAttribute("composants", composants);
             
-            // Rediriger vers la page du formulaire de réparation
-            RequestDispatcher dispatcher = request.getRequestDispatcher("reparation_form.jsp");
-            dispatcher.forward(request, response);
+            // Charger la liste des réparations
+            List<Reparation> reparations = Reparation.getAll(connexion);
+            request.setAttribute("reparations", reparations);
+            
+            request.getRequestDispatcher("reparation_form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur de connexion à la base de données");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Erreur de connexion à la base de données: " + e.getMessage());
         }
     }
 
     // Traite l'envoi du formulaire de réparation
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Récupérer les paramètres du formulaire
-        String dateDebutParam = request.getParameter("dateDebut");
-        String dateFinParam = request.getParameter("dateFin");
-        String descri = request.getParameter("descri");
-        int technicienId = Integer.parseInt(request.getParameter("technicien"));
-        int ordinateurId = Integer.parseInt(request.getParameter("ordinateur"));
-        double prixMainDoeuvre = Double.parseDouble(request.getParameter("prixMainDoeuvre"));
+        try {
+            // Récupérer les paramètres du formulaire
+            String dateDebutParam = request.getParameter("dateDebut");
+            String dateFinParam = request.getParameter("dateFin");
+            
+            // Convertir le format datetime-local (2025-01-16T00:13) en format timestamp
+            dateDebutParam = dateDebutParam.replace('T', ' ') + ":00";
+            dateFinParam = dateFinParam.replace('T', ' ') + ":00";
+            
+            String descri = request.getParameter("descri");
+            int technicienId = Integer.parseInt(request.getParameter("technicien"));
+            int ordinateurId = Integer.parseInt(request.getParameter("ordinateur"));
+            double prixMainDoeuvre = Double.parseDouble(request.getParameter("prixMainDoeuvre"));
 
-        // Récupérer la liste des composants sélectionnés
-        String[] composantsIds = request.getParameterValues("composants");
-
-        Timestamp dateDebut = Timestamp.valueOf(dateDebutParam);
-        Timestamp dateFin = Timestamp.valueOf(dateFinParam);
-        
-        // Créer l'objet Reparation
-        
-
-        try (Connection connexion = Connexion.getConnexion()) {
-            Technicien technicien = Technicien.getById(null, technicienId); // Vous pouvez récupérer plus d'informations selon votre modèle
-            Ordinateur ordinateur = Ordinateur.getById(null, ordinateurId); // Idem pour ordinateur
-            Reparation reparation = new Reparation(dateDebut, dateFin, descri, technicien, ordinateur, prixMainDoeuvre);
-            // Sauvegarder la réparation dans la base
-            reparation.save(connexion);
-
-            // Rediriger vers une page de confirmation ou la liste des réparations
-            response.sendRedirect(request.getContextPath() + "/reparations");
+            Timestamp dateDebut = Timestamp.valueOf(dateDebutParam);
+            Timestamp dateFin = Timestamp.valueOf(dateFinParam);
+            
+            try (Connection connexion = Connexion.getConnexion()) {
+                Technicien technicien = Technicien.getById(null, technicienId);
+                Ordinateur ordinateur = Ordinateur.getById(null, ordinateurId);
+                Reparation reparation = new Reparation(dateDebut, dateFin, descri, technicien, ordinateur, prixMainDoeuvre);
+                reparation.save(connexion);
+                doGet(request, response);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur lors de l'enregistrement de la réparation");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur lors de l'enregistrement de la réparation: " + e.getMessage());
         }
     }
 }

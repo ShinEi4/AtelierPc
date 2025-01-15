@@ -3,7 +3,7 @@
 <%@page import="models.*" %>
 <%@page import="java.util.List" %>
 <%
-    List<Composant> composants=(List<Composant>)request.getAttribute("composants");
+    List<Reparation> reparations=(List<Reparation>)request.getAttribute("reparations");
 %>
   <head>
     <meta charset="UTF-8" />
@@ -203,7 +203,7 @@
         <div class="content">
           <div class="page-inner">
             <div class="page-header">
-              <h4 class="page-title">Composant List</h4>
+              <h4 class="page-title">Reparation List</h4>
               <ul class="breadcrumbs">
                 <li class="nav-home">
                   <a href="index.jsp">
@@ -214,13 +214,13 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">Composant</a>
+                  <a href="#">Reparation</a>
                 </li>
                 <li class="separator">
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">List</a>
+                  <a href="/ReparationOrdi/reparations">Liste</a>
                 </li>
               </ul>
             </div>
@@ -238,8 +238,8 @@
                           <thead>
                             <tr>
                               <th>#</th>
-                              <th>Date de début</th>
-                              <th>Date de fin</th>
+                              <th>Depot</th>
+                              <th>Retour</th>
                               <th>Description</th>
                               <th>Technicien</th>
                               <th>Ordinateur</th>
@@ -255,10 +255,10 @@
                               <td><%= reparation.getDateFin() %></td>
                               <td><%= reparation.getDescri() %></td>
                               <td><%= reparation.getTechnicien().getNom() %></td>
-                              <td><%= reparation.getOrdinateur().getNom() %></td>
+                              <td><%= reparation.getOrdinateur().getModele().getNom() %></td>
                               <td><%= reparation.getPrixMainDoeuvre() %></td>
                               <td>
-                                <a href="/ReparationOrdi/reparationform?id=<%= reparation.getIdReparation() %>&action=details" class="btn btn-primary">Voir details</a>
+                                <a href="/ReparationOrdi/reparations?id=<%= reparation.getIdReparation() %>&action=details" class="btn btn-primary">Voir details</a>
                               </td>
                             </tr>
                             <% } %>

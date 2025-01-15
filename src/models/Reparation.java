@@ -114,13 +114,14 @@ public class Reparation {
             connexion = Connexion.getConnexion();
         }
 
-        String sql = "INSERT INTO reparation (date_debut, date_fin, descri, id_technicien, id_ordinateur) VALUES (?, ?, ?, ?, ?) RETURNING id_reparation";
+        String sql = "INSERT INTO reparation (date_debut, date_fin, descri, id_technicien, id_ordinateur,prix_main_doeuvre) VALUES (?, ?, ?, ?, ?, ?) RETURNING id_reparation";
         try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
             stmt.setTimestamp(1, this.dateDebut);
             stmt.setTimestamp(2, this.dateFin);
             stmt.setString(3, this.descri);
             stmt.setInt(4, this.technicien.getIdTechnicien());
             stmt.setInt(5, this.ordinateur.getIdOrdinateur());
+            stmt.setDouble(6, this.prixMainDoeuvre);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     this.idReparation = rs.getInt("id_reparation");
@@ -137,16 +138,17 @@ public class Reparation {
         }
     }
     
-    public void ajouterComposant(Composant composant, Connection connexion) throws Exception {
+    public void ajouterComposant(Composant composant, String probleme, Connection connexion) throws Exception {
         if (connexion == null) {
             connexion = Connexion.getConnexion();
         }
 
         // Insertion du composant dans la table Reparation_composant
-        String sql = "INSERT INTO reparation_composant (id_composant, id_reparation) VALUES (?, ?)";
+        String sql = "INSERT INTO reparation_composant (id_composant, id_reparation, probleme) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
             stmt.setInt(1, composant.getIdComposant());
-            stmt.setInt(2, this.idReparation);
+            stmt.setInt(2, this.idReparation);  
+            stmt.setString(3, probleme);
             stmt.executeUpdate();
         }
 
@@ -193,6 +195,9 @@ public class Reparation {
 
     // Fonction pour récupérer les composants associés à une réparation
     public static List<Composant> getComposantsByReparationId(Connection connexion, int idReparation) throws Exception {
+        if (connexion == null) {
+            connexion = Connexion.getConnexion();
+        }
         List<Composant> composants = new ArrayList<>();
         String sql = "SELECT * FROM reparation_composant WHERE id_reparation = ?";
         try (PreparedStatement stmt = connexion.prepareStatement(sql)) {

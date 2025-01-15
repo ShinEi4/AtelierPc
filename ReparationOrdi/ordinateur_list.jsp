@@ -238,6 +238,7 @@
                           <thead>
                             <tr>
                               <th>#</th>
+                              <th>Id Serie</th>
                               <th>Modele</th>
                               <th>Client</th>
                             </tr>
@@ -245,6 +246,7 @@
                           <tbody>
                             <% for(Ordinateur ordinateur : ordinateurs) { %>
                             <tr>
+                              <td><%= ordinateur.getIdOrdinateur() %></td>
                               <td><%= ordinateur.getIdSerie() %></td>
                               <td><%= ordinateur.getModele().getNom() %></td>
                               <td><%= ordinateur.getClient().getNom() %></td>

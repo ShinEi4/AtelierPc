@@ -1,6 +1,7 @@
 package servlets;
 
 import models.Reparation;
+import models.Composant;
 import models.TypeComposant;
 
 import javax.servlet.*;
@@ -14,39 +15,48 @@ public class ReparationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        String typeComposant=null;
-        String categorieModele=null;
-        if (request.getParameter("typeComposant") !=null) {
-            typeComposant = request.getParameter("typeComposant");
-        }
-        if (request.getParameter("categorieModele") !=null) {
-            categorieModele = request.getParameter("categorieModele");
-            
-        }
-
+        
         try {
-            List<TypeComposant> tc = TypeComposant.getAll(null); // Connexion à fournir
+            if ("details".equals(action)) {
+                int idReparation = Integer.parseInt(request.getParameter("id"));
+                Reparation reparation = Reparation.getById(null, idReparation);
+                List<Composant> composants = Reparation.getComposantsByReparationId(null, idReparation);
+                request.setAttribute("composants", composants);
+                request.setAttribute("reparation", reparation);
+                request.getRequestDispatcher("reparation_details.jsp").forward(request, response);
+                return;
+            }
+
+            // Code existant...
+            String typeComposant = request.getParameter("typeComposant");
+            String categorieModele = request.getParameter("categorieModele");
+            
+            List<TypeComposant> tc = TypeComposant.getAll(null);
             request.setAttribute("typescomposants", tc);
             List<Reparation> reparations;
 
             if ("recherche".equalsIgnoreCase(action) && typeComposant != null && !typeComposant.isEmpty()) {
-                // Recherche par type de composant
-                reparations = Reparation.getByComposantType(null, typeComposant); // Connexion à fournir
+                reparations = Reparation.getByComposantType(null, typeComposant);
             } else if ("rechercheretour".equalsIgnoreCase(action)) {
-                // Recherche des retours
-                reparations = Reparation.getRetours(null,typeComposant,categorieModele); // Connexion à fournir
+                reparations = Reparation.getRetours(null, typeComposant, categorieModele);
             } else {
-                // Récupérer toutes les réparations
-                reparations = Reparation.getAll(null); // Connexion à fournir
+                reparations = Reparation.getAll(null);
             }
 
             request.setAttribute("reparations", reparations);
+            request.getRequestDispatcher("reparation_list.jsp").forward(request, response);
+            
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Erreur lors de la récupération des réparations.");
+            System.out.println("erreur"+e.getMessage());
+            try {
+                List<Reparation> reparations = Reparation.getAll(null);
+                request.setAttribute("reparations", reparations);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            request.setAttribute("error", "Erreur lors de la récupération des données: " + e.getMessage());
+            request.getRequestDispatcher("reparation_list.jsp").forward(request, response);
         }
-
-        // Rediriger vers la page de liste des réparations
-        request.getRequestDispatcher("/WEB-INF/reparation_list.jsp").forward(request, response);
     }
 }
