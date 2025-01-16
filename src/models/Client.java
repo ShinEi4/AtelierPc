@@ -1,13 +1,13 @@
 package models;
 
-import utils.Connexion;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import utils.Connexion;
 
 public class Client {
     private int idClient;
@@ -118,5 +118,33 @@ public class Client {
             }
         }
         return null; // Si aucun client n'est trouvé avec l'id donné
+    }
+
+    public static List<Client> getClientsByReparationDate(Connection connexion, LocalDate date) throws SQLException, ClassNotFoundException {
+        if (connexion == null) {
+            connexion = Connexion.getConnexion();
+        }
+        
+        if (date == null) {
+            date = LocalDate.now();
+        }
+
+        List<Client> clients = new ArrayList<>();
+        String sql = "SELECT DISTINCT c.* FROM v_client_reparation_date c WHERE DATE(date_debut) = ?";
+        
+        try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
+            stmt.setDate(1, java.sql.Date.valueOf(date));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Client client = new Client(
+                        rs.getInt("id_client"),
+                        rs.getString("nom"),
+                        rs.getString("num")
+                    );
+                    clients.add(client);
+                }
+            }
+        }
+        return clients;
     }
 }

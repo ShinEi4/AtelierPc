@@ -252,7 +252,7 @@
                               <th>#</th>
                               <th>Nom</th>
                               <th>Type Composant</th>
-                              <th>Recommandé</th>
+                              <th>Recommande</th>
                             </tr>
                           </thead>
                           <tbody>

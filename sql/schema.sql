@@ -102,6 +102,20 @@ CREATE TABLE Modele_composant(
 );
 
 CREATE TABLE Composant_recommande(
+   id_recommandation INTEGER,
    id_composant INTEGER,
-   date DATE
+   date DATE,
+   motif VARCHAR(200),
+   PRIMARY KEY(id_recommandation),
+   FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
 );
+
+CREATE OR REPLACE VIEW v_client_reparation_date AS
+SELECT DISTINCT 
+   c.id_client,
+   c.nom,
+   c.num,
+   TO_CHAR(r.date_debut, 'DD/MM/YYYY') AS date_debut
+FROM client c
+JOIN ordinateur o ON c.id_client = o.id_client
+JOIN reparation r ON o.id_ordinateur = r.id_ordinateur ;

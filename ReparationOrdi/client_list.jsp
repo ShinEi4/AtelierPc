@@ -229,8 +229,27 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="card">
+                    <div class="card-body">
+                        <form action="/ReparationOrdi/clients" method="get" class="form-inline">
+                            <input type="hidden" name="action" value="recherche_date">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="dateRecherche" class="mr-2">Date de reparation : </label>
+                                <input type="date" class="form-control" id="dateRecherche" name="dateRecherche" 
+                                      value="<%= request.getAttribute("dateRecherche") != null ? request.getAttribute("dateRecherche") : java.time.LocalDate.now() %>">
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2">Rechercher</button>
+                        </form>
+                    </div>
+                  </div>
+                  <div class="card">
                     <div class="card-header">
-                      <h4 class="card-title">Clients enregistres</h4>
+                        <h4 class="card-title">
+                            <% if ("recherche_date".equals(request.getParameter("action"))) { %>
+                                Clients du jour : <%= request.getAttribute("dateRecherche") %>
+                            <% } else { %>
+                                Liste des clients
+                            <% } %>
+                        </h4>
                     </div>
                     <div class="card-body">
                       <div class="table-responsive">
