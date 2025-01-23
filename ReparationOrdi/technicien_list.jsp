@@ -118,6 +118,12 @@
                         <span class="sub-item">Categorie Modele</span>
                       </a>
                     </li>
+                    <li>
+                      <a href="/ReparationOrdi/commission">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="sub-item">Commission</span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -225,12 +231,44 @@
               </ul>
             </div>
             <div class="page-category">
+              <!-- Ajouter le formulaire de recherche -->
+              <div class="card">
+                <div class="card-body">
+                  <form action="/ReparationOrdi/techniciens" method="get" class="form-inline">
+                    <input type="hidden" name="action" value="recherche_commission">
+                    <div class="form-group mx-sm-3 mb-2">
+                      <label for="dateDebut" class="mr-2">Du : </label>
+                      <input type="date" class="form-control" id="dateDebut" name="dateDebut">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                      <label for="dateFin" class="mr-2">Au : </label>
+                      <input type="date" class="form-control" id="dateFin" name="dateFin">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">Voir les commissions</button>
+                  </form>
+                </div>
+              </div>
               <!-- Contenu de la liste -->
               <div class="row">
                 <div class="col-md-12">
                   <div class="card">
                     <div class="card-header">
-                      <h4 class="card-title">Techniciens enregistres</h4>
+                      <h4 class="card-title">
+                        <% if (request.getAttribute("dateDebut") != null && request.getAttribute("dateFin") != null) { %>
+                            Techniciens avec leurs commissions du 
+                            <%= ((String)request.getAttribute("dateDebut")).split("T")[0] %> 
+                            au 
+                            <%= ((String)request.getAttribute("dateFin")).split("T")[0] %>
+                        <% } else if (request.getAttribute("dateDebut") != null) { %>
+                            Techniciens avec leurs commissions à partir du 
+                            <%= ((String)request.getAttribute("dateDebut")).split("T")[0] %>
+                        <% } else if (request.getAttribute("dateFin") != null) { %>
+                            Techniciens avec leurs commissions jusqu'au 
+                            <%= ((String)request.getAttribute("dateFin")).split("T")[0] %>
+                        <% } else { %>
+                            Liste des techniciens
+                        <% } %>
+                      </h4>
                     </div>
                     <div class="card-body">
                       <div class="table-responsive">
@@ -239,13 +277,15 @@
                             <tr>
                               <th>#</th>
                               <th>Nom</th>
+                              <th>Commission</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <% for(Technicien technicien : techniciens) { %>
+                            <% for(Technicien tech : techniciens) { %>
                             <tr>
-                              <td><%= technicien.getIdTechnicien() %></td>
-                              <td><%= technicien.getNom() %></td>
+                              <td><%= tech.getIdTechnicien() %></td>
+                              <td><%= tech.getNom() %></td>
+                              <td><%= tech.getTotalCommission() %> Ar</td>
                             </tr>
                             <% } %>
                           </tbody>
@@ -255,6 +295,8 @@
                   </div>
                 </div>
               </div>
+
+              
             </div>
           </div>
         </div>

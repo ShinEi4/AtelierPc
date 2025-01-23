@@ -43,8 +43,6 @@ CREATE TABLE Type_composant(
    PRIMARY KEY(id_type_composant)
 );
 
-
-
 CREATE TABLE Technicien(
    id_technicien SERIAL,
    nom VARCHAR(50) ,
@@ -110,6 +108,12 @@ CREATE TABLE Composant_recommande(
    FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
 );
 
+CREATE TABLE Commission (
+    id_commission SERIAL PRIMARY KEY,
+    pourcentage NUMERIC(5,2),
+    date_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE OR REPLACE VIEW v_client_reparation_date AS
 SELECT DISTINCT 
    c.id_client,
@@ -119,3 +123,18 @@ SELECT DISTINCT
 FROM client c
 JOIN ordinateur o ON c.id_client = o.id_client
 JOIN reparation r ON o.id_ordinateur = r.id_ordinateur ;
+
+CREATE OR REPLACE VIEW v_commission AS
+SELECT 
+    t.id_technicien,
+    t.nom as nom_technicien,
+    r.id_reparation,
+    r.date_debut,
+    r.date_fin,
+    COALESCE(r.prix_main_doeuvre, 0) as prix_main_doeuvre,
+    c.pourcentage,
+    ROUND(COALESCE(r.prix_main_doeuvre, 0) * c.pourcentage / 100, 2) as commission
+FROM technicien t
+LEFT JOIN reparation r ON t.id_technicien = r.id_technicien
+CROSS JOIN commission c
+WHERE c.id_commission = (SELECT id_commission FROM commission ORDER BY date_modification DESC LIMIT 1);

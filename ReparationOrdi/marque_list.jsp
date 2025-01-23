@@ -118,6 +118,12 @@
                         <span class="sub-item">Categorie Modele</span>
                       </a>
                     </li>
+                    <li>
+                      <a href="/ReparationOrdi/commission">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="sub-item">Commission</span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>

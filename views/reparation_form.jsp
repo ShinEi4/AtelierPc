@@ -122,6 +122,12 @@
                         <span class="sub-item">Categorie Modele</span>
                       </a>
                     </li>
+                    <li>
+                      <a href="/ReparationOrdi/commission">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="sub-item">Commission</span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -267,8 +273,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="prixMainDoeuvre">Prix de la main d'oeuvre</label>
-                            <input type="number" class="form-control" id="prixMainDoeuvre" name="prixMainDoeuvre" placeholder="Entrer le prix de la main d'oeuvre" required>
+                            <label for="prixMainDoeuvre">Prix de la reparation</label>
+                            <input type="number" class="form-control" id="prixMainDoeuvre" name="prixMainDoeuvre" placeholder="Entrer le prix de la reparation" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Valider</button>
                         </form>

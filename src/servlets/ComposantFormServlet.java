@@ -54,20 +54,16 @@ public class ComposantFormServlet extends HttpServlet {
             if ("recommander".equals(action)) {
                 int idComposant = Integer.parseInt(request.getParameter("composant"));
                 Date dateRecommandation = Date.valueOf(request.getParameter("dateRecommandation"));
-                String motif = request.getParameter("motif");
                 
-                String sql = "INSERT INTO composant_recommande (id_recommandation, id_composant, date, motif) VALUES ((SELECT COALESCE(MAX(id_recommandation), 0) + 1 FROM composant_recommande), ?, ?, ?)";
+                String sql = "INSERT INTO composant_recommande (id_composant, date) VALUES (?, ?)";
                 try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
                     stmt.setInt(1, idComposant);
                     stmt.setDate(2, dateRecommandation);
-                    stmt.setString(3, motif);
                     stmt.executeUpdate();
                     connexion.commit();
                 }
                 
-                String script = "<script>swal('Succès!', 'Composant recommandé avec succès!', {icon: 'success'});</script>";
-                request.setAttribute("sweetAlertScript", script);
-                doGet(request, response);
+                response.sendRedirect(request.getContextPath() + "/composants");
                 return;
             }
             
@@ -103,9 +99,8 @@ public class ComposantFormServlet extends HttpServlet {
             
         } catch (Exception e) {
             e.printStackTrace();
-            String script = "<script>swal('Erreur!', 'Erreur lors de l\\'opération: " + e.getMessage().replace("'", "\\'") + "', {icon: 'error'});</script>";
-            request.setAttribute("sweetAlertScript", script);
-            doGet(request, response);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Erreur lors de l'opération: " + e.getMessage());
         }
     }
 }

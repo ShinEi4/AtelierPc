@@ -122,6 +122,12 @@
                         <span class="sub-item">Categorie Modele</span>
                       </a>
                     </li>
+                    <li>
+                      <a href="/ReparationOrdi/commission">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="sub-item">Commission</span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -276,10 +282,6 @@
                                 <div class="form-group">
                                     <label for="dateRecommandation">Date de recommandation</label>
                                     <input type="date" class="form-control" id="dateRecommandation" name="dateRecommandation" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="motif">Motif de la recommandation</label>
-                                    <textarea class="form-control" id="motif" name="motif" rows="3" required></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Recommander</button>
                             </form>

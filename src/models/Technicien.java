@@ -1,17 +1,19 @@
 package models;
 
-import utils.Connexion;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import utils.Connexion;
 
 public class Technicien {
     private int idTechnicien;
     private String nom;
+    private double totalCommission;
 
     // Constructeur vide
     public Technicien() {
@@ -43,6 +45,14 @@ public class Technicien {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public double getTotalCommission() {
+        return totalCommission;
+    }
+
+    public void setTotalCommission(double totalCommission) {
+        this.totalCommission = totalCommission;
     }
 
     // Fonction save (Insertion dans la base)
@@ -104,5 +114,57 @@ public class Technicien {
             }
         }
         return null; // Si aucun technicien n'est trouvé avec l'id donné
+    }
+
+    public static List<Technicien> getAllWithCommission(Connection connexion, 
+            LocalDateTime dateDebut, LocalDateTime dateFin) throws Exception {
+        if (connexion == null) {
+            connexion = Connexion.getConnexion();
+        }
+
+        List<Technicien> techniciens = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT t.*, COALESCE(SUM(vc.commission), 0) as total_commission " +
+            "FROM technicien t " +
+            "LEFT JOIN v_commission vc ON t.id_technicien = vc.id_technicien "
+        );
+
+        // Gestion des dates conditionnelles
+        if (dateDebut != null || dateFin != null) {
+            sql.append("AND ");
+            if (dateDebut != null && dateFin != null) {
+                sql.append("DATE(vc.date_debut) BETWEEN DATE(?) AND DATE(?) ");
+            } else if (dateDebut != null) {
+                sql.append("DATE(vc.date_debut) >= DATE(?) ");
+            } else {
+                sql.append("DATE(vc.date_debut) <= DATE(?) ");
+            }
+        }
+        
+        sql.append("GROUP BY t.id_technicien, t.nom");
+
+        try (PreparedStatement stmt = connexion.prepareStatement(sql.toString())) {
+            // Paramétrage des dates
+            if (dateDebut != null && dateFin != null) {
+                stmt.setTimestamp(1, Timestamp.valueOf(dateDebut));
+                stmt.setTimestamp(2, Timestamp.valueOf(dateFin));
+            } else if (dateDebut != null) {
+                stmt.setTimestamp(1, Timestamp.valueOf(dateDebut));
+            } else if (dateFin != null) {
+                stmt.setTimestamp(1, Timestamp.valueOf(dateFin));
+            }
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Technicien tech = new Technicien(
+                        rs.getInt("id_technicien"),
+                        rs.getString("nom")
+                    );
+                    tech.setTotalCommission(rs.getDouble("total_commission"));
+                    techniciens.add(tech);
+                }
+            }
+        }
+        return techniciens;
     }
 }
