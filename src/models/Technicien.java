@@ -14,20 +14,23 @@ public class Technicien {
     private int idTechnicien;
     private String nom;
     private double totalCommission;
+    private Sexe sexe;
 
     // Constructeur vide
     public Technicien() {
     }
 
     // Constructeur avec id
-    public Technicien(int idTechnicien, String nom) {
+    public Technicien(int idTechnicien, String nom, Sexe sexe) {
         this.idTechnicien = idTechnicien;
         this.nom = nom;
+        this.sexe = sexe;
     }
 
     // Constructeur sans id
-    public Technicien(String nom) {
+    public Technicien(String nom, Sexe sexe) {
         this.nom = nom;
+        this.sexe = sexe;
     }
 
     // Getters et setters
@@ -55,15 +58,24 @@ public class Technicien {
         this.totalCommission = totalCommission;
     }
 
+    public Sexe getSexe() {
+        return sexe;
+    }
+
+    public void setSexe(Sexe sexe) {
+        this.sexe = sexe;
+    }
+
     // Fonction save (Insertion dans la base)
     public void save(Connection connexion) throws SQLException, ClassNotFoundException {
         if (connexion == null) {
             connexion = Connexion.getConnexion();
         }
 
-        String sql = "INSERT INTO technicien (nom) VALUES (?) RETURNING id_technicien";
+        String sql = "INSERT INTO technicien (nom, id_sexe) VALUES (?, ?) RETURNING id_technicien";
         try (PreparedStatement stmt = connexion.prepareStatement(sql)) {
             stmt.setString(1, this.nom);
+            stmt.setInt(2, this.sexe.getIdSexe());
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     this.idTechnicien = rs.getInt("id_technicien");
@@ -81,13 +93,15 @@ public class Technicien {
         }
 
         List<Technicien> techniciens = new ArrayList<>();
-        String sql = "SELECT * FROM technicien";
+        String sql = "SELECT * FROM technicien ";
         try (PreparedStatement stmt = connexion.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
+                Sexe sexe = Sexe.getById(connexion,rs.getInt("id_sexe"));
                 Technicien technicien = new Technicien(
-                        rs.getInt("id_technicien"),
-                        rs.getString("nom")
+                    rs.getInt("id_technicien"),
+                    rs.getString("nom"),
+                    sexe
                 );
                 techniciens.add(technicien);
             }
@@ -108,7 +122,8 @@ public class Technicien {
                 if (rs.next()) {
                     return new Technicien(
                             rs.getInt("id_technicien"),
-                            rs.getString("nom")
+                            rs.getString("nom"),
+                            Sexe.getById(connexion,rs.getInt("id_sexe"))
                     );
                 }
             }
@@ -158,8 +173,57 @@ public class Technicien {
                 while (rs.next()) {
                     Technicien tech = new Technicien(
                         rs.getInt("id_technicien"),
-                        rs.getString("nom")
+                        rs.getString("nom"),
+                        Sexe.getById(connexion,rs.getInt("id_sexe"))
                     );
+                    tech.setTotalCommission(rs.getDouble("total_commission"));
+                    techniciens.add(tech);
+                }
+            }
+        }
+        return techniciens;
+    }
+
+    public static List<Technicien> getCommissionsBySexe(Connection connexion, 
+            LocalDateTime dateDebut, LocalDateTime dateFin) throws Exception {
+        if (connexion == null) {
+            connexion = Connexion.getConnexion();
+        }
+
+        List<Technicien> techniciens = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT s.id_sexe, COALESCE(SUM(vc.commission), 0) as total_commission " +
+            "FROM sexe s " +
+            "LEFT JOIN technicien t ON s.id_sexe = t.id_sexe " +
+            "LEFT JOIN v_commission vc ON t.id_technicien = vc.id_technicien "
+        );
+
+        if (dateDebut != null || dateFin != null) {
+            sql.append("WHERE ");
+            if (dateDebut != null && dateFin != null) {
+                sql.append("DATE(vc.date_debut) BETWEEN DATE(?) AND DATE(?) ");
+            } else if (dateDebut != null) {
+                sql.append("DATE(vc.date_debut) >= DATE(?) ");
+            } else {
+                sql.append("DATE(vc.date_debut) <= DATE(?) ");
+            }
+        }
+        
+        sql.append("GROUP BY s.id_sexe, s.nom");
+
+        try (PreparedStatement stmt = connexion.prepareStatement(sql.toString())) {
+            if (dateDebut != null && dateFin != null) {
+                stmt.setTimestamp(1, Timestamp.valueOf(dateDebut));
+                stmt.setTimestamp(2, Timestamp.valueOf(dateFin));
+            } else if (dateDebut != null || dateFin != null) {
+                stmt.setTimestamp(1, Timestamp.valueOf(dateDebut != null ? dateDebut : dateFin));
+            }
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Sexe sexe = Sexe.getById(connexion,rs.getInt("id_sexe"));
+                    Technicien tech = new Technicien();
+                    tech.setSexe(sexe);
                     tech.setTotalCommission(rs.getDouble("total_commission"));
                     techniciens.add(tech);
                 }

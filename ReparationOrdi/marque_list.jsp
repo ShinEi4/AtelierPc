@@ -200,7 +200,26 @@
                   </ul>
                 </div>
               </li>
+              <!-- Nouveau Menu Etat -->
+              <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#etats">
+                  <i class="fas fa-chart-bar"></i>
+                  <p>Etats</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="etats">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="/ReparationOrdi/commissions-by-sexe">
+                        <i class="fas fa-venus-mars"></i>
+                        <span class="sub-item">Commissions par Sexe</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
             </ul>
+
           </div>
         </div>
       </div>

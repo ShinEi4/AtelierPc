@@ -27,7 +27,7 @@ public class ReparationServlet extends HttpServlet {
                 return;
             }
 
-            // Code existant...
+            .
             String typeComposant = request.getParameter("typeComposant");
             String categorieModele = request.getParameter("categorieModele");
             

@@ -17,6 +17,12 @@ CREATE TABLE categorie_modele(
    PRIMARY KEY(id_categorie_modele)
 );
 
+CREATE TABLE Sexe(
+   id_sexe SERIAL,
+   nom VARCHAR(50),
+   PRIMARY KEY(id_sexe)
+);
+
 CREATE TABLE Modele(
    id_modele SERIAL,
    nom VARCHAR(50) ,
@@ -24,7 +30,7 @@ CREATE TABLE Modele(
    id_categorie_modele INTEGER NOT NULL,
    PRIMARY KEY(id_modele),
    FOREIGN KEY(id_marque) REFERENCES Marque(id_marque),
-   FOREIGN KEY(id_categorie_modele) REFERENCES categorie_modele(id_modele)
+   FOREIGN KEY(id_categorie_modele) REFERENCES categorie_modele(id_categorie_modele)
 );
 
 CREATE TABLE Ordinateur(
@@ -46,7 +52,9 @@ CREATE TABLE Type_composant(
 CREATE TABLE Technicien(
    id_technicien SERIAL,
    nom VARCHAR(50) ,
-   PRIMARY KEY(id_technicien)
+   id_sexe INTEGER NOT NULL DEFAULT 1,
+   PRIMARY KEY(id_technicien),
+   FOREIGN KEY(id_sexe) REFERENCES Sexe(id_sexe)
 );
 
 CREATE TABLE Reparation(
@@ -122,7 +130,7 @@ SELECT DISTINCT
    TO_CHAR(r.date_debut, 'DD/MM/YYYY') AS date_debut
 FROM client c
 JOIN ordinateur o ON c.id_client = o.id_client
-JOIN reparation r ON o.id_ordinateur = r.id_ordinateur ;
+JOIN reparation r ON o.id_ordinateur = r.id_ordinateur;
 
 CREATE OR REPLACE VIEW v_commission AS
 SELECT 

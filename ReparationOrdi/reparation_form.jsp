@@ -259,7 +259,7 @@
                         <div class="form-group">
                             <label for="technicien">Technicien</label>
                             <select class="form-select form-control" id="technicien" name="technicien">
-                            <% for(Technicien technicien : techniciens) { %>
+                            <% for(Technicien technicien : techniciens) {  %>
                                 <option value="<%= technicien.getIdTechnicien() %>"><%= technicien.getNom() %></option>
                             <% } %>
                             </select>

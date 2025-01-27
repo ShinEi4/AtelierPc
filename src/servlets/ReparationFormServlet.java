@@ -73,6 +73,7 @@ public class ReparationFormServlet extends HttpServlet {
             try (Connection connexion = Connexion.getConnexion()) {
                 Technicien technicien = Technicien.getById(null, technicienId);
                 Ordinateur ordinateur = Ordinateur.getById(null, ordinateurId);
+                System.out.println("ordinateur: "+ordinateur.getModele().getNom());
                 Reparation reparation = new Reparation(dateDebut, dateFin, descri, technicien, ordinateur, prixMainDoeuvre);
                 reparation.save(connexion);
                 doGet(request, response);

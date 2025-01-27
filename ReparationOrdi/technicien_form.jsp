@@ -241,6 +241,14 @@
                           <label for="nom">Nom du technicien</label>
                           <input type="text" class="form-control" id="nom" name="nom" placeholder="Entrer le nom du technicien" required>
                         </div>
+                        <div class="form-group">
+                          <label for="sexe_id">Sexe</label>
+                          <select class="form-control" id="sexe_id" name="sexe_id">
+                            <c:forEach items="${sexes}" var="sexe">
+                              <option value="${sexe.idSexe}">${sexe.nom}</option>
+                            </c:forEach>
+                          </select>
+                        </div>
                         <button type="submit" class="btn btn-primary">Valider</button>
                       </form>
                     </div>
