@@ -65,9 +65,11 @@ INSERT INTO Ordinateur (id_serie, id_modele, id_client) VALUES
 ('DELL789012', 2, 2),
 ('LEN345678', 3, 3);
 
--- Insertion commission initiale
-INSERT INTO Commission (pourcentage, date_modification) VALUES 
-(10.00, CURRENT_TIMESTAMP);
+-- Insertion commission initiale avec prix minimum
+INSERT INTO Commission (pourcentage, prix_min, date_modification) VALUES 
+(10.00, 200000, '2024-01-01 00:00:00'),
+(12.00, 250000, '2024-02-01 00:00:00'),
+(15.00, 200000, '2024-03-01 00:00:00');
 
 -- Insertion des réparations
 INSERT INTO Reparation (date_debut, date_fin, descri, prix_main_doeuvre, id_technicien, id_ordinateur) VALUES 

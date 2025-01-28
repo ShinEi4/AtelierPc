@@ -119,6 +119,7 @@ CREATE TABLE Composant_recommande(
 CREATE TABLE Commission (
     id_commission SERIAL PRIMARY KEY,
     pourcentage NUMERIC(5,2),
+    prix_min NUMERIC(15,2),
     date_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -141,8 +142,19 @@ SELECT
     r.date_fin,
     COALESCE(r.prix_main_doeuvre, 0) as prix_main_doeuvre,
     c.pourcentage,
-    ROUND(COALESCE(r.prix_main_doeuvre, 0) * c.pourcentage / 100, 2) as commission
+    c.prix_min,
+    CASE 
+        WHEN COALESCE(r.prix_main_doeuvre, 0) >= c.prix_min THEN 
+            ROUND(COALESCE(r.prix_main_doeuvre, 0) * c.pourcentage / 100, 2)
+        ELSE 0
+    END as commission
 FROM technicien t
 LEFT JOIN reparation r ON t.id_technicien = r.id_technicien
-CROSS JOIN commission c
-WHERE c.id_commission = (SELECT id_commission FROM commission ORDER BY date_modification DESC LIMIT 1);
+LEFT JOIN LATERAL (
+    SELECT pourcentage, prix_min
+    FROM commission c
+    WHERE c.date_modification <= r.date_debut
+    ORDER BY c.date_modification DESC
+    LIMIT 1
+) c ON true
+WHERE r.id_reparation IS NOT NULL;

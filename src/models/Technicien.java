@@ -146,7 +146,7 @@ public class Technicien {
 
         // Gestion des dates conditionnelles
         if (dateDebut != null || dateFin != null) {
-            sql.append("AND ");
+            sql.append("WHERE ");
             if (dateDebut != null && dateFin != null) {
                 sql.append("DATE(vc.date_debut) BETWEEN DATE(?) AND DATE(?) ");
             } else if (dateDebut != null) {
@@ -156,7 +156,7 @@ public class Technicien {
             }
         }
         
-        sql.append("GROUP BY t.id_technicien, t.nom");
+        sql.append("GROUP BY t.id_technicien, t.nom, t.id_sexe");
 
         try (PreparedStatement stmt = connexion.prepareStatement(sql.toString())) {
             // Paramétrage des dates
@@ -190,41 +190,49 @@ public class Technicien {
             connexion = Connexion.getConnexion();
         }
 
+        // D'abord, récupérer tous les sexes
+        List<Sexe> allSexes = Sexe.getAll(connexion);
         List<Technicien> techniciens = new ArrayList<>();
-        StringBuilder sql = new StringBuilder(
-            "SELECT s.id_sexe, COALESCE(SUM(vc.commission), 0) as total_commission " +
-            "FROM sexe s " +
-            "LEFT JOIN technicien t ON s.id_sexe = t.id_sexe " +
-            "LEFT JOIN v_commission vc ON t.id_technicien = vc.id_technicien "
-        );
 
-        if (dateDebut != null || dateFin != null) {
-            sql.append("WHERE ");
-            if (dateDebut != null && dateFin != null) {
-                sql.append("DATE(vc.date_debut) BETWEEN DATE(?) AND DATE(?) ");
-            } else if (dateDebut != null) {
-                sql.append("DATE(vc.date_debut) >= DATE(?) ");
-            } else {
-                sql.append("DATE(vc.date_debut) <= DATE(?) ");
-            }
-        }
-        
-        sql.append("GROUP BY s.id_sexe, s.nom");
+        // Pour chaque sexe, calculer la commission totale
+        for (Sexe sexe : allSexes) {
+            StringBuilder sql = new StringBuilder(
+                "SELECT COALESCE(SUM(vc.commission), 0) as total_commission " +
+                "FROM v_commission vc " +
+                "JOIN technicien t ON vc.id_technicien = t.id_technicien " +
+                "WHERE t.id_sexe = ? "
+            );
 
-        try (PreparedStatement stmt = connexion.prepareStatement(sql.toString())) {
-            if (dateDebut != null && dateFin != null) {
-                stmt.setTimestamp(1, Timestamp.valueOf(dateDebut));
-                stmt.setTimestamp(2, Timestamp.valueOf(dateFin));
-            } else if (dateDebut != null || dateFin != null) {
-                stmt.setTimestamp(1, Timestamp.valueOf(dateDebut != null ? dateDebut : dateFin));
+            if (dateDebut != null || dateFin != null) {
+                if (dateDebut != null && dateFin != null) {
+                    sql.append("AND DATE(vc.date_debut) BETWEEN DATE(?) AND DATE(?) ");
+                } else if (dateDebut != null) {
+                    sql.append("AND DATE(vc.date_debut) >= DATE(?) ");
+                } else {
+                    sql.append("AND DATE(vc.date_debut) <= DATE(?) ");
+                }
             }
-            
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Sexe sexe = Sexe.getById(connexion,rs.getInt("id_sexe"));
+
+            try (PreparedStatement stmt = connexion.prepareStatement(sql.toString())) {
+                stmt.setInt(1, sexe.getIdSexe());
+                
+                int paramIndex = 2;
+                if (dateDebut != null && dateFin != null) {
+                    stmt.setTimestamp(paramIndex++, Timestamp.valueOf(dateDebut));
+                    stmt.setTimestamp(paramIndex, Timestamp.valueOf(dateFin));
+                } else if (dateDebut != null || dateFin != null) {
+                    stmt.setTimestamp(paramIndex, Timestamp.valueOf(dateDebut != null ? dateDebut : dateFin));
+                }
+                
+                try (ResultSet rs = stmt.executeQuery()) {
                     Technicien tech = new Technicien();
                     tech.setSexe(sexe);
-                    tech.setTotalCommission(rs.getDouble("total_commission"));
+                    // Si le ResultSet a une ligne, on prend la valeur, sinon 0
+                    if (rs.next()) {
+                        tech.setTotalCommission(rs.getDouble("total_commission"));
+                    } else {
+                        tech.setTotalCommission(0.0);
+                    }
                     techniciens.add(tech);
                 }
             }
